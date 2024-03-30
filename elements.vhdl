@@ -138,10 +138,9 @@ end entity incrementor;
 
 architecture behavioral of incrementor is 
 begin
-    process
-    begin
-        data_out <= std_logic_vector(unsigned(data_in) + 1);
-    end process;
+
+    data_out <= std_logic_vector(unsigned(data_in) + 1);
+
 end architecture behavioral;
 
 
@@ -197,21 +196,31 @@ end architecture gate_level;
 
 
 
--- library IEEE;
--- use IEEE.STD_LOGIC_1164.ALL;
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.NUMERIC_STD.ALL;
 
--- -- entity address_calculator
+entity address_calculator is
+    generic (address_size: integer := 16);
+    port(a,b : in std_logic_vector(address_size-1 downto 0);
+         address_out : out std_logic_vector(address_size-1 downto 0));
+end entity address_calculator;
 
-
--- library IEEE;
--- use IEEE.STD_LOGIC_1164.ALL;
-
--- -- entity ALU
+architecture behavioral of address_calculator is
+begin
+    address_out <= std_logic_vector(unsigned(a) + unsigned(b) + 16);
+end architecture behavioral;
 
 
 -- library IEEE;
 -- use IEEE.STD_LOGIC_1164.ALL;
 
 -- -- entity mux
+
+
+-- library IEEE;
+-- use IEEE.STD_LOGIC_1164.ALL;
+
+-- -- entity ALU
 
 
