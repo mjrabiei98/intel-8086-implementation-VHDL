@@ -215,8 +215,26 @@ end architecture behavioral;
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
--- entity mux
 
+entity mux is
+    generic(input_size: integer := 16);
+    port(a,b,c,d : in std_logic_vector(input_size-1 downto 0);
+         sel : in std_logic_vector(1 downto 0);
+         data_out : out std_logic_vector(input_size-1 downto 0));
+end entity mux;
+
+architecture behavioral of mux is
+begin
+    process(a,b,c,d,sel)
+    begin
+        if sel = "00" then data_out <= a;
+        elsif sel = "01" then data_out <= b;
+        elsif sel = "10" then data_out <= c;
+        elsif sel = "11" then data_out <= d;
+        else data_out <= a;
+        end if;
+    end process;
+end architecture behavioral;
 
 -- library IEEE;
 -- use IEEE.STD_LOGIC_1164.ALL;
