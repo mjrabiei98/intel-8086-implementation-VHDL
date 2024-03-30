@@ -238,16 +238,43 @@ end architecture behavioral;
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.NUMERIC_STD.ALL;
 
 entity alu is
-    generic();
-    port();
+    generic(input_size : integer := 16);
+    port(a,b : in std_logic_vector(input_size-1 downto 0);
+         op_sel : in std_logic_vector(3 downto 0);
+         data_out : out std_logic_vector(input_size-1 downto 0);
+         carry_out, zero :  out std_logic);
 end entity alu;
 
 
 
-architecture behavioral of alu is
-begin
-        
-end architecture behavioral;
+architecture Behavioral of alu is
+    begin
+        process(op_sel, a, b)
+        variable sum_extended : std_logic_vector(15 downto 0);
+        begin
+            case op_sel is
+                when "0000" =>  -- Addition
+                    sum_extended := std_logic_vector(unsigned('0' & a) + unsigned('0' & b));
+                    data_out <= std_logic_vector(signed(a) + signed(b)); 
+                    carry_out <= sum_extended(15);
+                    if sum_extended = "0000000000000000" then zero <= '1'; else zero <= '0'; end if;
+                when "0001" =>  -- Subtraction
+                    sum_extended := std_logic_vector(signed(a) - signed(b));
+                    data_out <= std_logic_vector(signed(a) - signed(b));
+                    -- zero <= '1' when sum_extended = 0 others => '0';
+                when "0010" =>  -- AND
+                    data_out <= a and b;
+                when "0011" =>  -- OR
+                    data_out <= a or b;
+                when "0100" =>  -- XOR
+                    data_out <= a xor b;
+                when others =>  -- Default or undefined operation
+                    data_out <= (others => 'X');
+            end case;
+        end process;
+
+    end Behavioral;
 

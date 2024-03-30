@@ -4,7 +4,7 @@ K3
 cModel Technology
 dC:\Users\mohammad javad\Desktop\uni\arshad tehran university\term 2\VHDL\first try to learn vhdl
 Eaddress_calculator
-Z0 w1711789348
+Z0 w1711803963
 Z1 DPx4 ieee 11 numeric_std 0 22 O3PF8EB`?j9=z7KT`fn941
 Z2 DPx3 std 6 textio 0 22 5>J:;AW>W0[[dW0I6EN1Q0
 Z3 DPx4 ieee 14 std_logic_1164 0 22 5=aWaoGZSMWIcH0i^f`XF1
@@ -16,7 +16,7 @@ L203
 VJQ84A7hSJjOfb<kUALi<e2
 Z7 OV;C;10.1d;51
 32
-Z8 !s108 1711789354.057000
+Z8 !s108 1711803965.938000
 Z9 !s90 -reportprogress|300|-work|work|-2002|-explicit|C:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW/HW1/code/elements.vhdl|
 Z10 !s107 C:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW/HW1/code/elements.vhdl|
 Z11 o-work work -2002 -explicit -O0
@@ -40,8 +40,45 @@ R10
 R11
 R12
 !i10b 1
+Ealu
+Z13 w1711803963
+R1
+R2
+R3
+R4
+R5
+R6
+l0
+L243
+V?IR4m1aQzC7B<0e4kXgHn3
+R7
+32
+R8
+R9
+R10
+R11
+R12
+!s100 `hIWLAYLY8G`[VJJhX<m72
+!i10b 1
+Abehavioral
+R1
+R2
+R3
+DEx4 work 3 alu 0 22 ?IR4m1aQzC7B<0e4kXgHn3
+l254
+L253
+V;3LW]642llPdEHJ9K`zRQ3
+R7
+32
+R8
+R9
+R10
+R11
+R12
+!s100 9WDN4H>j<NW=WMl^<7MA]2
+!i10b 1
 Eincrementor
-Z13 w1711789348
+R13
 R1
 R2
 R3
@@ -358,7 +395,7 @@ VB@SUiaQzJZ685zCbWK9M@1
 R7
 32
 !i10b 1
-Z27 !s108 1711789354.163000
+Z27 !s108 1711803966.048000
 Z28 !s90 -reportprogress|300|-work|work|-2002|-explicit|C:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW/HW1/code/testbench.vhdl|
 Z29 !s107 C:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW/HW1/code/testbench.vhdl|
 R11
