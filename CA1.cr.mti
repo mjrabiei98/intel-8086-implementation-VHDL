@@ -1,0 +1,14 @@
+{C:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW/HW1/code/testbench.vhdl} {1 {vcom -work work -2002 -explicit {C:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW/HW1/code/testbench.vhdl}
+Model Technology ModelSim ALTERA vcom 10.1d Compiler 2012.11 Nov  2 2012
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Compiling entity register_tester
+-- Compiling architecture tb of register_tester
+-- Loading package std_logic_arith
+-- Loading package STD_LOGIC_UNSIGNED
+-- Loading package NUMERIC_STD
+-- Loading entity reg
+-- Loading package ENV
+
+} {} {}}
