@@ -212,10 +212,10 @@ begin
 end architecture behavioral;
 
 
--- library IEEE;
--- use IEEE.STD_LOGIC_1164.ALL;
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
 
--- -- entity mux
+-- entity mux
 
 
 -- library IEEE;
