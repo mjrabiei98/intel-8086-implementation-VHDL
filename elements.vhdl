@@ -236,9 +236,18 @@ begin
     end process;
 end architecture behavioral;
 
--- library IEEE;
--- use IEEE.STD_LOGIC_1164.ALL;
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
 
--- -- entity ALU
+entity alu is
+    generic();
+    port();
+end entity alu;
 
+
+
+architecture behavioral of alu is
+begin
+        
+end architecture behavioral;
 
