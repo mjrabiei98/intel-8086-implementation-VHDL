@@ -5,10 +5,9 @@ Model Technology ModelSim ALTERA vcom 10.1d Compiler 2012.11 Nov  2 2012
 -- Loading package std_logic_1164
 -- Compiling entity register_tester
 -- Compiling architecture tb of register_tester
+-- Loading package std_logic_textio
 -- Loading package std_logic_arith
--- Loading package STD_LOGIC_UNSIGNED
--- Loading package NUMERIC_STD
--- Loading entity reg
+-- Loading entity memory
 -- Loading package ENV
 
 } {} {}}

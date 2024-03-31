@@ -56,7 +56,9 @@ begin
         while not endfile(input_file) loop
             readline(input_file, line);
             read(line, text_data);
-            mem(i) <= text_data;
+            -- write(output, line);        -- Write the line to the standard output
+            -- write(output, line);
+            mem(i) <= (text_data);
             i := i + 1;
         end loop;
         file_close(input_file);
