@@ -62,7 +62,7 @@ begin
                 end if;
             end if;
             if pop = '1' then
-                head <= head + 1;
+                head <= (head + 1) mod 6;
                 count <= count - 1;
             end if;
         end if;
