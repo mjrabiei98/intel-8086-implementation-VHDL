@@ -235,10 +235,11 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
 entity TriStateBuffer is
+    generic(buffer_size : integer := 16);
     Port (
-        data_in  : in  std_logic;  -- Input data
+        data_in  : in  std_logic_vector(buffer_size-1 downto 0);  -- Input data
         enable   : in  std_logic;  -- Enable signal for the buffer
-        data_out : out std_logic   -- Output data
+        data_out : out std_logic_vector(buffer_size-1 downto 0)   -- Output data
     );
 end TriStateBuffer;
 
@@ -249,7 +250,7 @@ begin
         if enable = '1' then
             data_out <= data_in;  -- Drive the signal
         else
-            data_out <= 'Z';  -- High impedance
+            data_out <= (others => 'Z');  -- High impedance
         end if;
     end process;
 end Behavioral;

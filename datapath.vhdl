@@ -6,6 +6,5 @@ use IEEE.NUMERIC_STD.ALL;
 
 
 entity datapath is 
-    generic ();
     port ();
 end entity datapath;

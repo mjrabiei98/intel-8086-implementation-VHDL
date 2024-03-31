@@ -4,7 +4,7 @@ K3
 cModel Technology
 dC:\Users\mohammad javad\Desktop\uni\arshad tehran university\term 2\VHDL\first try to learn vhdl
 Eaddress_calculator
-Z0 w1711893784
+Z0 w1711907912
 Z1 DPx4 ieee 11 numeric_std 0 22 O3PF8EB`?j9=z7KT`fn941
 Z2 DPx3 std 6 textio 0 22 5>J:;AW>W0[[dW0I6EN1Q0
 Z3 DPx4 ieee 14 std_logic_1164 0 22 5=aWaoGZSMWIcH0i^f`XF1
@@ -16,7 +16,7 @@ L155
 VJQ84A7hSJjOfb<kUALi<e2
 Z7 OV;C;10.1d;51
 32
-Z8 !s108 1711893800.205000
+Z8 !s108 1711907917.426000
 Z9 !s90 -reportprogress|300|-work|work|-2002|-explicit|C:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW/HW1/code/elements.vhdl|
 Z10 !s107 C:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW/HW1/code/elements.vhdl|
 Z11 o-work work -2002 -explicit -O0
@@ -41,7 +41,7 @@ R12
 !s100 =G_QP1TL6[aG[4j1U:0K<1
 !i10b 1
 Ealu
-Z13 w1711893784
+Z13 w1711907912
 R1
 R2
 R3
@@ -169,7 +169,7 @@ VB]I`2[nz7ZYSj3IScjo0?3
 R7
 32
 !i10b 1
-Z21 !s108 1711893800.362000
+Z21 !s108 1711907917.568000
 Z22 !s90 -reportprogress|300|-work|work|-2002|-explicit|C:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW/HW1/code/memory.vhdl|
 Z23 !s107 C:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW/HW1/code/memory.vhdl|
 R11
@@ -393,7 +393,7 @@ L4
 VB@SUiaQzJZ685zCbWK9M@1
 R7
 32
-Z37 !s108 1711893800.314000
+Z37 !s108 1711907917.521000
 Z38 !s90 -reportprogress|300|-work|work|-2002|-explicit|C:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW/HW1/code/testbench.vhdl|
 Z39 !s107 C:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW/HW1/code/testbench.vhdl|
 R11
@@ -429,7 +429,7 @@ R5
 R6
 l0
 L237
-V?ETQO9=Vh<ckYkQb__PMc2
+VN7bV_6B8Nm^k5Igh4LVOO0
 R7
 32
 R8
@@ -437,15 +437,15 @@ R9
 R10
 R11
 R12
-!s100 2712E@D;@EXQTI;1YM2_E2
+!s100 o1;X_WLGJ;jX?8b^AISlN2
 !i10b 1
 Abehavioral
 R2
 R3
-DEx4 work 14 tristatebuffer 0 22 ?ETQO9=Vh<ckYkQb__PMc2
-l246
-L245
-VB@lIYPiNI@2DHTc33JGi]2
+DEx4 work 14 tristatebuffer 0 22 N7bV_6B8Nm^k5Igh4LVOO0
+l247
+L246
+VUPI?`U?US_U<nJ4CzLRdG2
 R7
 32
 R8
@@ -453,7 +453,7 @@ R9
 R10
 R11
 R12
-!s100 W?cNPW:iB0`3CLBK?gE@W1
+!s100 XmJ>ZY38DheVE5Jzz:M0e0
 !i10b 1
 Ex_registers
 R13
