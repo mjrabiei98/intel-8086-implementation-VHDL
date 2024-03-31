@@ -7,7 +7,7 @@ Model Technology ModelSim ALTERA vcom 10.1d Compiler 2012.11 Nov  2 2012
 -- Compiling architecture tb of register_tester
 -- Loading package std_logic_textio
 -- Loading package std_logic_arith
--- Loading entity memory
+-- Loading entity queue
 -- Loading package ENV
 
 } {} {}} {C:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW/HW1/code/memory.vhdl} {1 {vcom -work work -2002 -explicit {C:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW/HW1/code/memory.vhdl}

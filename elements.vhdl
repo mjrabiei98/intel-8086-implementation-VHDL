@@ -42,31 +42,37 @@ architecture behavioral of queue is
     type queue_type is array (0 to 5) of STD_LOGIC_VECTOR(7 downto 0);
     signal queue : queue_type;
     signal head, tail : integer range 0 to 6 := 0;
+    signal count : integer range 0 to 6 := 0;
 begin
     process(clk, rst)
     begin
         if rst = '1' then
             head <= 0;
             tail <= 0;
-            data_out <= "00000000";
-            -- queue := (others => '0');
+            count <= 0;
+            queue <= (others => (others => '0'));
 
         elsif (clk'event and clk = '1') then
-            if (head < 5) then 
+            if (count < 5) then 
                 if push = '1' then
-                    queue(tail mod 6) <= data_in;
-                    tail <= tail + 1;
+                    queue(tail mod 6) <= data_in(15 downto 8);
+                    queue(tail mod 6 + 1) <= data_in(7 downto 0);
+                    tail <= (tail + 2) mod 6 ;
+                    count <= count + 2;
                 end if;
             end if;
             if pop = '1' then
-                data_out <= queue(head mod 6);
                 head <= head + 1;
+                count <= count - 1;
             end if;
         end if;
     end process;
 
-    full <= '1' when (tail - head) > 4 else '0';
-    empty <= '1' when (tail - head) < 4 else '0';
+    full <= '1' when count > 4 else '0';
+    empty <= '1' when count = 0 else '0';
+
+    data_out <= queue(head); 
+
 
 end architecture behavioral;
 
