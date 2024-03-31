@@ -103,7 +103,7 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
 entity x_registers is
-    port (clk, rst, en: in std_logic; 
+    port (clk, rst, en,en_l,en_h: in std_logic; 
           d : in std_logic_vector (15 downto 0); 
           q : out std_logic_vector (15 downto 0);
           q_h, q_l : out std_logic_vector(7 downto 0));
@@ -122,6 +122,12 @@ begin
             q <= d;
             q_h <= d(15 downto 8);
             q_l <= d(7 downto 0);
+        elsif (clk'event and clk = '1' and en_l = '1') then 
+            q <= d;
+            q_l <= d(7 downto 0);
+        elsif (clk'event and clk = '1' and en_h = '1') then 
+            q <= d;
+            q_h <= d(15 downto 8);
         end if;
     end process;
 end architecture behavioral;

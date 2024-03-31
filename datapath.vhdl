@@ -8,3 +8,11 @@ use IEEE.NUMERIC_STD.ALL;
 entity datapath is 
     port ();
 end entity datapath;
+
+architecture bwhavioral of datapath is
+
+    -- signal 
+
+begin
+
+end bwhavioral ; -- bwhavioralsab
