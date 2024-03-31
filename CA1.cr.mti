@@ -10,33 +10,14 @@ Model Technology ModelSim ALTERA vcom 10.1d Compiler 2012.11 Nov  2 2012
 -- Loading entity memory
 -- Loading package ENV
 
-} {} {}} {C:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW/HW1/code/elements.vhdl} {2 {vcom -work work -2002 -explicit {C:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW/HW1/code/elements.vhdl}
+} {} {}} {C:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW/HW1/code/memory.vhdl} {1 {vcom -work work -2002 -explicit {C:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW/HW1/code/memory.vhdl}
 Model Technology ModelSim ALTERA vcom 10.1d Compiler 2012.11 Nov  2 2012
 -- Loading package STANDARD
 -- Loading package TEXTIO
 -- Loading package std_logic_1164
--- Loading package std_logic_arith
--- Loading package STD_LOGIC_UNSIGNED
--- Loading package NUMERIC_STD
--- Compiling entity reg
--- Compiling architecture behavioral of reg
 -- Loading package std_logic_textio
--- Compiling entity queue
--- Compiling architecture behavioral of queue
-** Warning: [14] C:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW/HW1/code/elements.vhdl(57): (vcom-1272) Length of expected is 8; length of actual is 16.
-
--- Compiling entity incrementor
--- Compiling architecture behavioral of incrementor
--- Compiling entity x_registers
--- Compiling architecture behavioral of x_registers
--- Compiling architecture gate_level of x_registers
--- Loading entity x_registers
--- Loading entity reg
--- Compiling entity address_calculator
--- Compiling architecture behavioral of address_calculator
--- Compiling entity mux
--- Compiling architecture behavioral of mux
--- Compiling entity alu
--- Compiling architecture Behavioral of alu
+-- Loading package std_logic_arith
+-- Compiling entity memory
+-- Compiling architecture behavioral of memory
 
 } {} {}}

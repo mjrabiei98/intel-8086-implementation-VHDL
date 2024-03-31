@@ -22,7 +22,7 @@ architecture behavioral of memory is
     -- signal mem : memory_array(0 to 2**ADDR_WIDTH-1);
 
     type memory_array is array (0 to 2**ADDR_WIDTH-1) of std_logic_vector(DATA_WIDTH-1 downto 0);
-    signal mem : memory_array;
+    signal mem : memory_array := (others => (others => '0'));
     signal init_done : std_logic := '0';
 
 

@@ -197,30 +197,53 @@ end entity alu;
 
 
 architecture Behavioral of alu is
+begin
+    process(op_sel, a, b)
+    variable sum_extended : std_logic_vector(15 downto 0);
     begin
-        process(op_sel, a, b)
-        variable sum_extended : std_logic_vector(15 downto 0);
-        begin
-            case op_sel is
-                when "0000" =>  -- Addition
-                    sum_extended := std_logic_vector(unsigned('0' & a) + unsigned('0' & b));
-                    data_out <= std_logic_vector(signed(a) + signed(b)); 
-                    carry_out <= sum_extended(15);
-                    if sum_extended = "0000000000000000" then zero <= '1'; else zero <= '0'; end if;
-                when "0001" =>  -- Subtraction
-                    sum_extended := std_logic_vector(signed(a) - signed(b));
-                    data_out <= std_logic_vector(signed(a) - signed(b));
-                    -- zero <= '1' when sum_extended = 0 others => '0';
-                when "0010" =>  -- AND
-                    data_out <= a and b;
-                when "0011" =>  -- OR
-                    data_out <= a or b;
-                when "0100" =>  -- XOR
-                    data_out <= a xor b;
-                when others =>  -- Default or undefined operation
-                    data_out <= (others => 'X');
-            end case;
-        end process;
+        case op_sel is
+            when "0000" =>  -- Addition
+                sum_extended := std_logic_vector(unsigned('0' & a) + unsigned('0' & b));
+                data_out <= std_logic_vector(signed(a) + signed(b)); 
+                carry_out <= sum_extended(15);
+                if sum_extended = "0000000000000000" then zero <= '1'; else zero <= '0'; end if;
+            when "0001" =>  -- Subtraction
+                sum_extended := std_logic_vector(signed(a) - signed(b));
+                data_out <= std_logic_vector(signed(a) - signed(b));
+                -- zero <= '1' when sum_extended = 0 others => '0';
+            when "0010" =>  -- AND
+                data_out <= a and b;
+            when "0011" =>  -- OR
+                data_out <= a or b;
+            when "0100" =>  -- XOR
+                data_out <= a xor b;
+            when others =>  -- Default or undefined operation
+                data_out <= (others => 'X');
+        end case;
+    end process;
 
-    end Behavioral;
+end Behavioral;
 
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity TriStateBuffer is
+    Port (
+        data_in  : in  std_logic;  -- Input data
+        enable   : in  std_logic;  -- Enable signal for the buffer
+        data_out : out std_logic   -- Output data
+    );
+end TriStateBuffer;
+
+architecture Behavioral of TriStateBuffer is
+begin
+    process(data_in, enable)
+    begin
+        if enable = '1' then
+            data_out <= data_in;  -- Drive the signal
+        else
+            data_out <= 'Z';  -- High impedance
+        end if;
+    end process;
+end Behavioral;
