@@ -20,22 +20,29 @@ use IEEE.NUMERIC_STD.ALL;
 --     );
 
 entity datapath is 
-    port (clk, rst, en_ES, ES_to_bus : in std_logic);
+    port (clk, rst, en_ES, ES_tri : in std_logic);
 end entity datapath;
 
 architecture bwhavioral of datapath is
 
-    signal 
+    signal ES_out : std_logic_vector (15 downto 0);
+    signal CS_out : std_logic_vector (15 downto 0);
+    signal SS_out : std_logic_vector (15 downto 0);
+    signal DS_out : std_logic_vector (15 downto 0);
+    signal IP_out : std_logic_vector (15 downto 0);
+    signal adr_gen_in1 : std_logic_vector (15 downto 0);
+    signal adr_gen_in2 : std_logic_vector (15 downto 0);
+
 
 begin
 
     ES : entity work.reg(behavioral)
         generic map (16)
-        port map(clk, rst, en_ES, );
+        port map(clk, rst, en_ES, ES_out);
 
-    ES_triState : entity work.reg(behavioral)
+    ES_triState : entity work.TriStateBuffer(behavioral)
         generic map (16)
-        port map( );
+        port map(ES_out, ES_tri, adr_gen_in1);
 
         
 
