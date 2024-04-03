@@ -105,12 +105,13 @@ use IEEE.STD_LOGIC_1164.ALL;
 entity x_registers is
     port (clk, rst, en,en_l,en_h: in std_logic; 
           d : in std_logic_vector (15 downto 0); 
-          q : out std_logic_vector (15 downto 0);
-          q_h, q_l : out std_logic_vector(7 downto 0));
+          q : out std_logic_vector (15 downto 0));
 
 end entity x_registers;
 
 architecture behavioral of x_registers is 
+    signal q_h, q_l : std_logic_vector(15 downto 0);
+    signal reg_data : std_logic_vector(15 downto 0);
 begin
     process(rst,clk)
     begin 
@@ -118,38 +119,42 @@ begin
             q <= (others => '0');
             q_h <= (others => '0');
             q_l <= (others => '0');
+            reg_data <= d;
         elsif (clk'event and clk = '1' and en = '1') then 
+            reg_data <= d;
             q <= d;
-            q_h <= d(15 downto 8);
-            q_l <= d(7 downto 0);
         elsif (clk'event and clk = '1' and en_l = '1') then 
-            q <= d;
-            q_l <= d(7 downto 0);
+            
+            q_l <= reg_data(15 downto 0) & d(7 downto 0);
+            q <= q_l;
+            reg_data <= reg_data(15 downto 0) & d(7 downto 0);
+
         elsif (clk'event and clk = '1' and en_h = '1') then 
-            q <= d;
-            q_h <= d(15 downto 8);
+            q_h <= d(15 downto 8) & reg_data(7 downto 0);
+            reg_data <= d(15 downto 8) & reg_data(7 downto 0);
+            q <= q_h;
         end if;
     end process;
 end architecture behavioral;
 
-architecture gate_level of x_registers is 
-    signal temp: std_logic_vector(15 downto 0);
-begin
+-- architecture gate_level of x_registers is 
+--     signal temp: std_logic_vector(15 downto 0);
+-- begin
 
-    xreg_h: entity work.reg(behavioral)
-          generic map(8)
-          port map(clk, rst, en, d(15 downto 8), temp(15 downto 8));
+--     xreg_h: entity work.reg(behavioral)
+--           generic map(8)
+--           port map(clk, rst, en, d(15 downto 8), temp(15 downto 8));
 
-    xreg_l: entity work.reg(behavioral)
-            generic map(8)
-            port map(clk, rst, en, d(15 downto 8), temp(7 downto 0));
+--     xreg_l: entity work.reg(behavioral)
+--             generic map(8)
+--             port map(clk, rst, en, d(15 downto 8), temp(7 downto 0));
 
-    q <= temp;
-    q_h <= temp(15 downto 8);
-    q_l <= temp(7 downto 0);
+--     q <= temp;
+--     q_h <= temp(15 downto 8);
+--     q_l <= temp(7 downto 0);
 
 
-end architecture gate_level;
+-- end architecture gate_level;
 
 
 
