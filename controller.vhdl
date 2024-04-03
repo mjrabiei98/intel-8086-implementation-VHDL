@@ -26,8 +26,77 @@ entity controller is
 end entity controller;
 
 architecture behavioral of controller is
+
+    TYPE state IS (idle);
+	SIGNAL pstate, nstate :state := idle;
+
 begin
 
-    
+    PROCESS (clk, reset)
+		
+	BEGIN
+		IF (reset = '1') THEN
+			pstate <= idle;
+		ELSIF (clk = '1' AND clk'EVENT) THEN
+			pstate <= nstate ;
+		END IF;
+	END PROCESS;
+
+    PROCESS (pstate,start,cnt,pipe_in) BEGIN 
+
+    --      sel<= '0';            load<= '0';              counter_en<= '0';      mbr_en<= '0';       done<= '0';
+    --      init <='0';           counterW_en<= '0';       
+	
+	
+	-- 	CASE pstate IS  
+
+	-- 		WHEN idle =>
+
+    --             pipe_out <= '1';
+	-- 			done <= '0';
+    --             load <= '0';
+    --             mbr_en <= '0';
+    --             sel <='0';
+    --             counter_en <='0';
+	-- 			IF (start='1' AND start'EVENT) THEN 
+	-- 				nstate <= init_bias; 
+	-- 			ELSE
+	-- 			    nstate <= idle; 
+	-- 			END IF;		
+
+	-- 		WHEN init_bias =>
+
+    --             pipe_out <= '0';
+    --             sel <= '0';
+    --             load <= '1'; 
+    --             counter_en <='0';
+    --             init <= '1';
+    --             nstate <= MAC; 	
+            
+	-- 		WHEN MAC =>
+
+    --              init <= '0';
+    --              sel <= '1';
+    --              counter_en <='1';
+    --              counterW_en <='1';
+    --              load <='1';
+
+	-- 			if (cnt=NumOfSteps) then 
+
+	-- 				nstate<= ready;
+                    
+
+    --             else
+                    
+    --                 nstate<= MAC;
+
+    --             end if;
+
+	-- 		WHEN ready =>
+	
+    --     END CASE;				
+	-- END PROCESS;
+
+
 
 end behavioral ; -- behavioral
