@@ -147,6 +147,44 @@ begin
     DX_tri : entity work.TriStateBuffer(behavioral)
                 port map(dx_out, dx_tri_en, data_bus_16);
 
+
+            --     entity reg is 
+            --     generic (register_size : integer := 8);
+            --     port (clk, rst, en: in std_logic; d : in std_logic_vector (register_size - 1 downto 0); q : out std_logic_vector (register_size-1 downto 0 ) );
+            -- end entity reg;
+
+    SP : entity work.reg(behavioral)
+                generic map(16)
+                port map(clk, rst, sp_en, data_bus_16, sp_out);
+    
+    SP_tri: entity work.TriStateBuffer(behavioral)
+                port map(sp_out, sp_tri_en, data_bus_16);
+
+    
+    BP : entity work.reg(behavioral)
+                generic map(16)
+                port map(clk, rst, bp_en, data_bus_16, bp_out);
+    
+    BP_tri: entity work.TriStateBuffer(behavioral)
+                port map(bp_out, bp_tri_en, data_bus_16);
+
+    
+                
+    SI : entity work.reg(behavioral)
+        generic map(16)
+        port map(clk, rst, si_en, data_bus_16, si_out);
+
+    SI_tri: entity work.TriStateBuffer(behavioral)
+        port map(si_out, si_tri_en, data_bus_16);
+
+
+    
+    DI : entity work.reg(behavioral)
+            generic map(16)
+            port map(clk, rst, di_en, data_bus_16, di_out);
+
+    DI_tri: entity work.TriStateBuffer(behavioral)
+        port map(di_out, di_tri_en, data_bus_16);
      
         
 
