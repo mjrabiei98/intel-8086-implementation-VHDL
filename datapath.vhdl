@@ -24,7 +24,8 @@ entity datapath is
          bp_en, bp_tri_en : in std_logic;
          si_en, si_tri_en : in std_logic;
          di_en, di_tri_en : in std_logic;
-         data_out: out std_logic_vector(15 downto 0));
+         data_out: out std_logic_vector(15 downto 0);
+         disable_inst_fetch : in std_logic);
 
 end entity datapath;
 
@@ -41,7 +42,6 @@ architecture behavioral of datapath is
     signal adr_gen_mux1_out : std_logic_vector (15 downto 0);
     signal queue_full : std_logic;
     signal queue_empty : std_logic;
-    signal disable_inst_fetch : std_logic;
     signal queue_out : std_logic_vector(7 downto 0);
     signal data_bus_16 : std_logic_vector(15 downto 0);
     signal push_queue : std_logic;

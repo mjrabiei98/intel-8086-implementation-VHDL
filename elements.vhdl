@@ -171,7 +171,7 @@ end entity address_calculator;
 
 architecture behavioral of address_calculator is
 begin
-    address_out <= std_logic_vector(unsigned(a) + unsigned(b) + 16);
+    address_out <= std_logic_vector(unsigned(a) + unsigned(b));
 end architecture behavioral;
 
 

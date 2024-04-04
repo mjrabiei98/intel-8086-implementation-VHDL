@@ -22,7 +22,8 @@ entity controller is
          bp_en, bp_tri_en : out std_logic;
          si_en, si_tri_en : out std_logic;
          di_en, di_tri_en : out std_logic;
-         mem_write_en : out std_logic);
+         mem_write_en : out std_logic;
+         disable_inst_fetch : out std_logic);
 
 end entity controller;
 
@@ -64,6 +65,7 @@ begin
     si_en<= '0'; si_tri_en <= '0';
     di_en<= '0'; di_tri_en <= '0';
     mem_write_en <= '0';
+    disable_inst_fetch <= '0';
 
     --      sel<= '0';            load<= '0';              counter_en<= '0';      mbr_en<= '0';       done<= '0';
     --      init <='0';           counterW_en<= '0';       

@@ -31,6 +31,7 @@ architecture behavioral of processor is
     signal bp_en, bp_tri_en : std_logic;
     signal si_en, si_tri_en : std_logic;
     signal di_en, di_tri_en : std_logic;
+    signal disable_inst_fetch : std_logic;
 
 begin
 
@@ -52,7 +53,7 @@ begin
                  bp_en, bp_tri_en,
                  si_en, si_tri_en,
                  di_en, di_tri_en,
-                 data_out); 
+                 data_out, disable_inst_fetch); 
 
     Contrl: entity work.controller(behavioral)
         port map(clk, rst, ES_tri, adr_gen_mux1_sel, 
@@ -70,6 +71,6 @@ begin
                  bp_en, bp_tri_en,
                  si_en, si_tri_en,
                  di_en, di_tri_en,
-                 mem_write_en);
+                 mem_write_en, disable_inst_fetch);
 
 end behavioral ; -- behavioral
