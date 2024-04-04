@@ -5,50 +5,12 @@ use IEEE.STD_LOGIC_UNSIGNED.ALL;
 use IEEE.NUMERIC_STD.ALL;
 
 
--- entity controller is 
-
---     port (clk, rst, ES_tri : out std_logic; adr_gen_mux1_sel : out std_logic_vector(1 downto 0); 
---          queue_out_to_ctrl : in std_logic_vector(7 downto 0);
---          inst_reg_out : in std_logic_vector(7 downto 0);
---          inst_reg_en : out std_logic;
---          pop_from_queue, alu_temp_reg1_en, alu_temp_reg2_en : out std_logic;
---          alu_op_sel : out std_logic_vector(3 downto 0);
---          ALU_tri_en : out std_logic;
---          ax_en, ax_en_l, ax_en_h, ax_tri_en : out std_logic;
---          bx_en, bx_en_l, bx_en_h, bx_tri_en : out std_logic;
---          cx_en, cx_en_l, cx_en_h, cx_tri_en : out std_logic;
---          dx_en, dx_en_l, dx_en_h, dx_tri_en : out std_logic;
---          sp_en, sp_tri_en : out std_logic;
---          bp_en, bp_tri_en : out std_logic;
---          si_en, si_tri_en : out std_logic;
---          di_en, di_tri_en : out std_logic);
-
--- end entity controller;
-
--- entity datapath is 
-
---     port (clk, rst, ES_tri : in std_logic; adr_gen_mux1_sel : in std_logic_vector(1 downto 0); 
---          address_out : out std_logic_vector(15 downto 0);
---          mem_data_in : in std_logic_vector(15 downto 0);
---          queue_out_to_ctrl : out std_logic_vector(7 downto 0);
---          inst_reg_out : out std_logic_vector(7 downto 0);
---          inst_reg_en : in std_logic;
---          pop_from_queue, alu_temp_reg1_en, alu_temp_reg2_en : in std_logic;
---          alu_op_sel : in std_logic_vector(3 downto 0);
---          ALU_tri_en : in std_logic;
---          ax_en, ax_en_l, ax_en_h, ax_tri_en : in std_logic;
---          bx_en, bx_en_l, bx_en_h, bx_tri_en : in std_logic;
---          cx_en, cx_en_l, cx_en_h, cx_tri_en : in std_logic;
---          dx_en, dx_en_l, dx_en_h, dx_tri_en : in std_logic;
---          sp_en, sp_tri_en : in std_logic;
---          bp_en, bp_tri_en : in std_logic;
---          si_en, si_tri_en : in std_logic;
---          di_en, di_tri_en : in std_logic);
-
--- end entity datapath;
 
 entity processor is 
-    port(clk,rst: in std_logic; address_out : out std_logic_vector(15 downto 0); mem_data_in : in std_logic_vector(15 downto 0));
+    port(clk,rst: in std_logic; address_out : out std_logic_vector(15 downto 0);
+         mem_data_in : in std_logic_vector(15 downto 0);
+         mem_write_en: out std_logic;
+         data_out: out std_logic_vector(15 downto 0));
 end entity processor;
 
 architecture behavioral of processor is
@@ -89,7 +51,8 @@ begin
                  sp_en, sp_tri_en,
                  bp_en, bp_tri_en,
                  si_en, si_tri_en,
-                 di_en, di_tri_en); 
+                 di_en, di_tri_en,
+                 data_out); 
 
     Contrl: entity work.controller(behavioral)
         port map(clk, rst, ES_tri, adr_gen_mux1_sel, 
@@ -106,6 +69,7 @@ begin
                  sp_en, sp_tri_en,
                  bp_en, bp_tri_en,
                  si_en, si_tri_en,
-                 di_en, di_tri_en);
+                 di_en, di_tri_en,
+                 mem_write_en);
 
 end behavioral ; -- behavioral

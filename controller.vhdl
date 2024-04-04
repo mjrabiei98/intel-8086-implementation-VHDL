@@ -21,7 +21,8 @@ entity controller is
          sp_en, sp_tri_en : out std_logic;
          bp_en, bp_tri_en : out std_logic;
          si_en, si_tri_en : out std_logic;
-         di_en, di_tri_en : out std_logic);
+         di_en, di_tri_en : out std_logic;
+         mem_write_en : out std_logic);
 
 end entity controller;
 

@@ -23,7 +23,8 @@ entity datapath is
          sp_en, sp_tri_en : in std_logic;
          bp_en, bp_tri_en : in std_logic;
          si_en, si_tri_en : in std_logic;
-         di_en, di_tri_en : in std_logic);
+         di_en, di_tri_en : in std_logic;
+         data_out: out std_logic_vector(15 downto 0));
 
 end entity datapath;
 
@@ -185,6 +186,8 @@ begin
 
     DI_tri: entity work.TriStateBuffer(behavioral)
         port map(di_out, di_tri_en, data_bus_16);
+
+    data_out <= data_bus_16;
      
         
 
