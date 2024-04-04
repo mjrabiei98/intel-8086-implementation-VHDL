@@ -5,7 +5,7 @@ entity testbench is end entity testbench;
 
 
 
-architecture tb of register_tester is
+architecture tb of testbench is
     signal clk : std_logic := '0';
     signal rst : std_logic := '0';
     signal write_en : std_logic;

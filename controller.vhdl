@@ -45,6 +45,26 @@ begin
 
     PROCESS (pstate) BEGIN 
 
+
+
+    ES_tri <= '0'; 
+    adr_gen_mux1_sel <= "00";
+    inst_reg_en <= '0';
+    pop_from_queue <= '0'; 
+    alu_temp_reg1_en <= '0'; 
+    alu_temp_reg2_en <= '0';
+    alu_op_sel <= "0000";
+    ALU_tri_en <= '0';
+    ax_en<= '0'; ax_en_l<= '0'; ax_en_h<= '0'; ax_tri_en <= '0';
+    bx_en<= '0'; bx_en_l<= '0'; bx_en_h<= '0'; bx_tri_en <= '0';
+    cx_en<= '0'; cx_en_l<= '0'; cx_en_h<= '0'; cx_tri_en <= '0';
+    dx_en<= '0'; dx_en_l<= '0'; dx_en_h<= '0'; dx_tri_en <= '0';
+    sp_en<= '0'; sp_tri_en <= '0';
+    bp_en<= '0'; bp_tri_en <= '0';
+    si_en<= '0'; si_tri_en <= '0';
+    di_en<= '0'; di_tri_en <= '0';
+    mem_write_en <= '0';
+
     --      sel<= '0';            load<= '0';              counter_en<= '0';      mbr_en<= '0';       done<= '0';
     --      init <='0';           counterW_en<= '0';       
 	

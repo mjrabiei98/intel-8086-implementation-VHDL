@@ -216,7 +216,7 @@ end entity alu;
 architecture Behavioral of alu is
 begin
     process(op_sel, a, b)
-    variable sum_extended : std_logic_vector(15 downto 0);
+    variable sum_extended : std_logic_vector(16 downto 0);
     begin
         case op_sel is
             when "0000" =>  -- Addition
