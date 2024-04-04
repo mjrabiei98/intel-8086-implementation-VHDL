@@ -7,7 +7,7 @@ use IEEE.NUMERIC_STD.ALL;
 
 entity controller is 
 
-    port (clk, rst, ES_tri : out std_logic; adr_gen_mux1_sel : out std_logic_vector(1 downto 0); 
+    port (clk, rst: in std_logic; ES_tri : out std_logic; adr_gen_mux1_sel : out std_logic_vector(1 downto 0); 
          queue_out_to_ctrl : in std_logic_vector(7 downto 0);
          inst_reg_out : in std_logic_vector(7 downto 0);
          inst_reg_en : out std_logic;
@@ -32,17 +32,17 @@ architecture behavioral of controller is
 
 begin
 
-    PROCESS (clk, reset)
+    PROCESS (clk, rst)
 		
 	BEGIN
-		IF (reset = '1') THEN
+		IF (rst = '1') THEN
 			pstate <= idle;
 		ELSIF (clk = '1' AND clk'EVENT) THEN
 			pstate <= nstate ;
 		END IF;
 	END PROCESS;
 
-    PROCESS (pstate,start,cnt,pipe_in) BEGIN 
+    PROCESS (pstate) BEGIN 
 
     --      sel<= '0';            load<= '0';              counter_en<= '0';      mbr_en<= '0';       done<= '0';
     --      init <='0';           counterW_en<= '0';       
@@ -95,7 +95,7 @@ begin
 	-- 		WHEN ready =>
 	
     --     END CASE;				
-	-- END PROCESS;
+	END PROCESS;
 
 
 

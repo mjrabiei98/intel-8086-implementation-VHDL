@@ -27,7 +27,7 @@ entity datapath is
 
 end entity datapath;
 
-architecture bwhavioral of datapath is
+architecture behavioral of datapath is
 
     signal ES_out : std_logic_vector (15 downto 0);
     signal CS_out : std_logic_vector (15 downto 0);
@@ -189,4 +189,4 @@ begin
         
 
 
-end bwhavioral ; -- bwhavioralsab
+end behavioral ; -- bwhavioralsab
