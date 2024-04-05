@@ -35,7 +35,7 @@ entity queue is
          data_in : in std_logic_vector (15 downto 0); 
          full : out std_logic;
          empty : out std_logic;
-         data_out : out std_logic_vector(7 downto 0));
+         data_out : out std_logic_vector(47 downto 0));
 end entity queue;
 
 architecture behavioral of queue is
@@ -71,7 +71,7 @@ begin
     full <= '1' when count > 4 else '0';
     empty <= '1' when count = 0 else '0';
 
-    data_out <= queue(head); 
+    data_out <= queue(head+5 mod 6) & queue(head+4 mod 6) & queue(head+3 mod 6) & queue(head+2 mod 6) & queue(head+1 mod 6) & queue(head mod 6); 
 
 
 end architecture behavioral;
