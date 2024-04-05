@@ -25,7 +25,8 @@ entity datapath is
          si_en, si_tri_en : in std_logic;
          di_en, di_tri_en : in std_logic;
          data_out: out std_logic_vector(15 downto 0);
-         disable_inst_fetch : in std_logic);
+         disable_inst_fetch : in std_logic;
+         number_of_pop : in integer);
 
 end entity datapath;
 
@@ -91,7 +92,7 @@ begin
     push_queue <= not disable_inst_fetch ;
 
     fifo_queue: entity work.queue(behavioral)
-                port map(clk, rst, push_queue, pop_from_queue, mem_data_in, queue_full, queue_empty, queue_out);
+                port map(clk, rst, push_queue, pop_from_queue, mem_data_in, queue_full, queue_empty, queue_out, number_of_pop);
 
     queue_out_to_ctrl <= queue_out;
 

@@ -1,141 +1,140 @@
-library IEEE;
-use IEEE.STD_LOGIC_1164.ALL;
-use IEEE.STD_LOGIC_ARITH.ALL;
-use IEEE.STD_LOGIC_UNSIGNED.ALL;
-use IEEE.NUMERIC_STD.ALL;
+LIBRARY IEEE;
+USE IEEE.STD_LOGIC_1164.ALL;
+USE IEEE.STD_LOGIC_ARITH.ALL;
+USE IEEE.STD_LOGIC_UNSIGNED.ALL;
+USE IEEE.NUMERIC_STD.ALL;
 
-entity reg is 
-    generic (register_size : integer := 8);
-    port (clk, rst, en: in std_logic; d : in std_logic_vector (register_size - 1 downto 0); q : out std_logic_vector (register_size-1 downto 0 ) );
-end entity reg;
+ENTITY reg IS
+    GENERIC (register_size : INTEGER := 8);
+    PORT (
+        clk, rst, en : IN STD_LOGIC;
+        d : IN STD_LOGIC_VECTOR (register_size - 1 DOWNTO 0);
+        q : OUT STD_LOGIC_VECTOR (register_size - 1 DOWNTO 0));
+END ENTITY reg;
 
-architecture behavioral of reg is 
-begin
-    process(rst,clk)
-    begin 
-        if(rst = '1') then q <= (others => '0'); 
-        elsif (clk'event and clk = '1' and en = '1') then q <= d;
-        end if;
-    end process;
-end architecture behavioral;
+ARCHITECTURE behavioral OF reg IS
+BEGIN
+    PROCESS (rst, clk)
+    BEGIN
+        IF (rst = '1') THEN
+            q <= (OTHERS => '0');
+        ELSIF (clk'event AND clk = '1' AND en = '1') THEN
+            q <= d;
+        END IF;
+    END PROCESS;
+END ARCHITECTURE behavioral;
 
+LIBRARY IEEE;
+USE IEEE.STD_LOGIC_1164.ALL;
+USE IEEE.STD_LOGIC_TEXTIO.ALL;
+USE STD.TEXTIO.ALL;
+USE IEEE.std_logic_arith.ALL;
+ENTITY queue IS
+    PORT (
+        clk, rst, push, pop : IN STD_LOGIC;
+        data_in : IN STD_LOGIC_VECTOR (15 DOWNTO 0);
+        full : OUT STD_LOGIC;
+        empty : OUT STD_LOGIC;
+        data_out : OUT STD_LOGIC_VECTOR(47 DOWNTO 0);
+        number_of_pop : in integer);
+END ENTITY queue;
 
-
-
-
-library IEEE;
-use IEEE.STD_LOGIC_1164.ALL;
-use IEEE.STD_LOGIC_TEXTIO.ALL;
-use STD.TEXTIO.ALL;
-use IEEE.std_logic_arith.all;
-
-
-entity queue is
-    port(clk, rst, push, pop : in std_logic; 
-         data_in : in std_logic_vector (15 downto 0); 
-         full : out std_logic;
-         empty : out std_logic;
-         data_out : out std_logic_vector(47 downto 0));
-end entity queue;
-
-architecture behavioral of queue is
-    type queue_type is array (0 to 5) of STD_LOGIC_VECTOR(7 downto 0);
-    signal queue : queue_type;
-    signal head, tail : integer range 0 to 6 := 0;
-    signal count : integer range 0 to 6 := 0;
-begin
-    process(clk, rst)
-    begin
-        if rst = '1' then
+ARCHITECTURE behavioral OF queue IS
+    TYPE queue_type IS ARRAY (0 TO 5) OF STD_LOGIC_VECTOR(7 DOWNTO 0);
+    SIGNAL queue : queue_type;
+    SIGNAL head, tail : INTEGER RANGE 0 TO 6 := 0;
+    SIGNAL count : INTEGER RANGE 0 TO 6 := 0;
+BEGIN
+    PROCESS (clk, rst)
+    BEGIN
+        IF rst = '1' THEN
             head <= 0;
             tail <= 0;
             count <= 0;
-            queue <= (others => (others => '0'));
+            queue <= (OTHERS => (OTHERS => '0'));
 
-        elsif (clk'event and clk = '1') then
-            if (count < 5) then 
-                if push = '1' then
-                    queue(tail mod 6) <= data_in(15 downto 8);
-                    queue(tail mod 6 + 1) <= data_in(7 downto 0);
-                    tail <= (tail + 2) mod 6 ;
+        ELSIF (clk'event AND clk = '1') THEN
+            IF (count < 5) THEN
+                IF push = '1' THEN
+                    queue(tail MOD 6) <= data_in(15 DOWNTO 8);
+                    queue(tail MOD 6 + 1) <= data_in(7 DOWNTO 0);
+                    tail <= (tail + 2) MOD 6;
                     count <= count + 2;
-                end if;
-            end if;
-            if pop = '1' then
-                head <= (head + 1) mod 6;
-                count <= count - 1;
-            end if;
-        end if;
-    end process;
+                END IF;
+            END IF;
+        ELSIF (clk'event AND clk = '0') THEN
 
-    full <= '1' when count > 4 else '0';
-    empty <= '1' when count = 0 else '0';
+            IF pop = '1' THEN
+                head <= (head + number_of_pop) MOD 6;
+                count <= count - number_of_pop;
+            END IF;
 
-    data_out <= queue((head+5) mod 6) & queue((head+4) mod 6) & queue((head+3) mod 6) & queue((head+2) mod 6) & queue((head+1) mod 6) & queue(head mod 6); 
+        END IF;
+    END PROCESS;
 
+    full <= '1' WHEN count > 4 ELSE
+        '0';
+    empty <= '1' WHEN count = 0 ELSE
+        '0';
 
-end architecture behavioral;
+    data_out <= queue((head + 5) MOD 6) & queue((head + 4) MOD 6) & queue((head + 3) MOD 6) & queue((head + 2) MOD 6) & queue((head + 1) MOD 6) & queue(head MOD 6);
+END ARCHITECTURE behavioral;
+LIBRARY IEEE;
+USE IEEE.STD_LOGIC_1164.ALL;
+USE IEEE.NUMERIC_STD.ALL;
 
+ENTITY incrementor IS
+    GENERIC (input_size : INTEGER := 16);
+    PORT (
+        data_in : STD_LOGIC_VECTOR (input_size - 1 DOWNTO 0);
+        data_out : OUT STD_LOGIC_VECTOR(input_size - 1 DOWNTO 0));
+END ENTITY incrementor;
 
+ARCHITECTURE behavioral OF incrementor IS
+BEGIN
 
+    data_out <= STD_LOGIC_VECTOR(unsigned(data_in) + 1);
 
-library IEEE;
-use IEEE.STD_LOGIC_1164.ALL;
-use IEEE.NUMERIC_STD.ALL;
+END ARCHITECTURE behavioral;
 
-entity incrementor is
-    generic(input_size : integer := 16);
-    port( data_in : std_logic_vector (input_size-1 downto 0); data_out : out std_logic_vector(input_size-1 downto 0));
-end entity incrementor;
+LIBRARY IEEE;
+USE IEEE.STD_LOGIC_1164.ALL;
 
-architecture behavioral of incrementor is 
-begin
+ENTITY x_registers IS
+    PORT (
+        clk, rst, en, en_l, en_h : IN STD_LOGIC;
+        d : IN STD_LOGIC_VECTOR (15 DOWNTO 0);
+        q : OUT STD_LOGIC_VECTOR (15 DOWNTO 0));
 
-    data_out <= std_logic_vector(unsigned(data_in) + 1);
+END ENTITY x_registers;
 
-end architecture behavioral;
-
-
-
-
-
-library IEEE;
-use IEEE.STD_LOGIC_1164.ALL;
-
-entity x_registers is
-    port (clk, rst, en,en_l,en_h: in std_logic; 
-          d : in std_logic_vector (15 downto 0); 
-          q : out std_logic_vector (15 downto 0));
-
-end entity x_registers;
-
-architecture behavioral of x_registers is 
-    signal q_h, q_l : std_logic_vector(15 downto 0);
-    signal reg_data : std_logic_vector(15 downto 0);
-begin
-    process(rst,clk)
-    begin 
-        if(rst = '1') then
-            q <= (others => '0');
-            q_h <= (others => '0');
-            q_l <= (others => '0');
+ARCHITECTURE behavioral OF x_registers IS
+    SIGNAL q_h, q_l : STD_LOGIC_VECTOR(15 DOWNTO 0);
+    SIGNAL reg_data : STD_LOGIC_VECTOR(15 DOWNTO 0);
+BEGIN
+    PROCESS (rst, clk)
+    BEGIN
+        IF (rst = '1') THEN
+            q <= (OTHERS => '0');
+            q_h <= (OTHERS => '0');
+            q_l <= (OTHERS => '0');
             reg_data <= d;
-        elsif (clk'event and clk = '1' and en = '1') then 
+        ELSIF (clk'event AND clk = '1' AND en = '1') THEN
             reg_data <= d;
             q <= d;
-        elsif (clk'event and clk = '1' and en_l = '1') then 
-            
-            q_l <= reg_data(15 downto 0) & d(7 downto 0);
-            q <= q_l;
-            reg_data <= reg_data(15 downto 0) & d(7 downto 0);
+        ELSIF (clk'event AND clk = '1' AND en_l = '1') THEN
 
-        elsif (clk'event and clk = '1' and en_h = '1') then 
-            q_h <= d(15 downto 8) & reg_data(7 downto 0);
-            reg_data <= d(15 downto 8) & reg_data(7 downto 0);
+            q_l <= reg_data(15 DOWNTO 0) & d(7 DOWNTO 0);
+            q <= q_l;
+            reg_data <= reg_data(15 DOWNTO 0) & d(7 DOWNTO 0);
+
+        ELSIF (clk'event AND clk = '1' AND en_h = '1') THEN
+            q_h <= d(15 DOWNTO 8) & reg_data(7 DOWNTO 0);
+            reg_data <= d(15 DOWNTO 8) & reg_data(7 DOWNTO 0);
             q <= q_h;
-        end if;
-    end process;
-end architecture behavioral;
+        END IF;
+    END PROCESS;
+END ARCHITECTURE behavioral;
 
 -- architecture gate_level of x_registers is 
 --     signal temp: std_logic_vector(15 downto 0);
@@ -152,120 +151,118 @@ end architecture behavioral;
 --     q <= temp;
 --     q_h <= temp(15 downto 8);
 --     q_l <= temp(7 downto 0);
-
-
 -- end architecture gate_level;
+LIBRARY IEEE;
+USE IEEE.STD_LOGIC_1164.ALL;
+USE IEEE.NUMERIC_STD.ALL;
 
+ENTITY address_calculator IS
+    GENERIC (address_size : INTEGER := 16);
+    PORT (
+        a, b : IN STD_LOGIC_VECTOR(address_size - 1 DOWNTO 0);
+        address_out : OUT STD_LOGIC_VECTOR(address_size - 1 DOWNTO 0));
+END ENTITY address_calculator;
 
+ARCHITECTURE behavioral OF address_calculator IS
+    SIGNAL temp : STD_LOGIC_VECTOR(31 DOWNTO 0);
+BEGIN
+    temp <= STD_LOGIC_VECTOR(unsigned(a) * 16 + unsigned(b));
+    address_out <= temp(15 DOWNTO 0);
+END ARCHITECTURE behavioral;
+LIBRARY IEEE;
+USE IEEE.STD_LOGIC_1164.ALL;
+ENTITY mux IS
+    GENERIC (input_size : INTEGER := 16);
+    PORT (
+        a, b, c, d : IN STD_LOGIC_VECTOR(input_size - 1 DOWNTO 0);
+        sel : IN STD_LOGIC_VECTOR(1 DOWNTO 0);
+        data_out : OUT STD_LOGIC_VECTOR(input_size - 1 DOWNTO 0));
+END ENTITY mux;
 
+ARCHITECTURE behavioral OF mux IS
+BEGIN
+    PROCESS (a, b, c, d, sel)
+    BEGIN
+        IF sel = "00" THEN
+            data_out <= a;
+        ELSIF sel = "01" THEN
+            data_out <= b;
+        ELSIF sel = "10" THEN
+            data_out <= c;
+        ELSIF sel = "11" THEN
+            data_out <= d;
+        ELSE
+            data_out <= a;
+        END IF;
+    END PROCESS;
+END ARCHITECTURE behavioral;
 
-library IEEE;
-use IEEE.STD_LOGIC_1164.ALL;
-use IEEE.NUMERIC_STD.ALL;
+LIBRARY IEEE;
+USE IEEE.STD_LOGIC_1164.ALL;
+USE IEEE.NUMERIC_STD.ALL;
 
-entity address_calculator is
-    generic (address_size: integer := 16);
-    port(a,b : in std_logic_vector(address_size-1 downto 0);
-         address_out : out std_logic_vector(address_size-1 downto 0));
-end entity address_calculator;
+ENTITY alu IS
+    GENERIC (input_size : INTEGER := 16);
+    PORT (
+        a, b : IN STD_LOGIC_VECTOR(input_size - 1 DOWNTO 0);
+        op_sel : IN STD_LOGIC_VECTOR(3 DOWNTO 0);
+        data_out : OUT STD_LOGIC_VECTOR(input_size - 1 DOWNTO 0);
+        carry_out, zero : OUT STD_LOGIC);
+END ENTITY alu;
 
-architecture behavioral of address_calculator is
-    signal temp: std_logic_vector(31 downto 0);
-begin
-    temp <= std_logic_vector(unsigned(a) * 16 + unsigned(b));
-    address_out <= temp(15 downto 0);
-end architecture behavioral;
-
-
-library IEEE;
-use IEEE.STD_LOGIC_1164.ALL;
-
-
-entity mux is
-    generic(input_size: integer := 16);
-    port(a,b,c,d : in std_logic_vector(input_size-1 downto 0);
-         sel : in std_logic_vector(1 downto 0);
-         data_out : out std_logic_vector(input_size-1 downto 0));
-end entity mux;
-
-architecture behavioral of mux is
-begin
-    process(a,b,c,d,sel)
-    begin
-        if sel = "00" then data_out <= a;
-        elsif sel = "01" then data_out <= b;
-        elsif sel = "10" then data_out <= c;
-        elsif sel = "11" then data_out <= d;
-        else data_out <= a;
-        end if;
-    end process;
-end architecture behavioral;
-
-library IEEE;
-use IEEE.STD_LOGIC_1164.ALL;
-use IEEE.NUMERIC_STD.ALL;
-
-entity alu is
-    generic(input_size : integer := 16);
-    port(a,b : in std_logic_vector(input_size-1 downto 0);
-         op_sel : in std_logic_vector(3 downto 0);
-         data_out : out std_logic_vector(input_size-1 downto 0);
-         carry_out, zero :  out std_logic);
-end entity alu;
-
-
-
-architecture Behavioral of alu is
-begin
-    process(op_sel, a, b)
-    variable sum_extended : std_logic_vector(16 downto 0);
-    begin
-        case op_sel is
-            when "0000" =>  -- Addition
-                sum_extended := std_logic_vector(unsigned('0' & a) + unsigned('0' & b));
-                data_out <= std_logic_vector(signed(a) + signed(b)); 
+ARCHITECTURE Behavioral OF alu IS
+BEGIN
+    PROCESS (op_sel, a, b)
+        VARIABLE sum_extended : STD_LOGIC_VECTOR(16 DOWNTO 0);
+    BEGIN
+        CASE op_sel IS
+            WHEN "0000" => -- Addition
+                sum_extended := STD_LOGIC_VECTOR(unsigned('0' & a) + unsigned('0' & b));
+                data_out <= STD_LOGIC_VECTOR(signed(a) + signed(b));
                 carry_out <= sum_extended(15);
-                if sum_extended = "0000000000000000" then zero <= '1'; else zero <= '0'; end if;
-            when "0001" =>  -- Subtraction
-                sum_extended := std_logic_vector(signed(a) - signed(b));
-                data_out <= std_logic_vector(signed(a) - signed(b));
+                IF sum_extended = "0000000000000000" THEN
+                    zero <= '1';
+                ELSE
+                    zero <= '0';
+                END IF;
+            WHEN "0001" => -- Subtraction
+                sum_extended := STD_LOGIC_VECTOR(signed(a) - signed(b));
+                data_out <= STD_LOGIC_VECTOR(signed(a) - signed(b));
                 -- zero <= '1' when sum_extended = 0 others => '0';
-            when "0010" =>  -- AND
-                data_out <= a and b;
-            when "0011" =>  -- OR
-                data_out <= a or b;
-            when "0100" =>  -- XOR
-                data_out <= a xor b;
-            when others =>  -- Default or undefined operation
-                data_out <= (others => 'X');
-        end case;
-    end process;
+            WHEN "0010" => -- AND
+                data_out <= a AND b;
+            WHEN "0011" => -- OR
+                data_out <= a OR b;
+            WHEN "0100" => -- XOR
+                data_out <= a XOR b;
+            WHEN OTHERS => -- Default or undefined operation
+                data_out <= (OTHERS => 'X');
+        END CASE;
+    END PROCESS;
 
-end Behavioral;
+END Behavioral;
+LIBRARY IEEE;
+USE IEEE.STD_LOGIC_1164.ALL;
+USE IEEE.STD_LOGIC_ARITH.ALL;
+USE IEEE.STD_LOGIC_UNSIGNED.ALL;
 
-
-library IEEE;
-use IEEE.STD_LOGIC_1164.ALL;
-use IEEE.STD_LOGIC_ARITH.ALL;
-use IEEE.STD_LOGIC_UNSIGNED.ALL;
-
-entity TriStateBuffer is
-    generic(buffer_size : integer := 16);
-    Port (
-        data_in  : in  std_logic_vector(buffer_size-1 downto 0);  -- Input data
-        enable   : in  std_logic;  -- Enable signal for the buffer
-        data_out : out std_logic_vector(buffer_size-1 downto 0)   -- Output data
+ENTITY TriStateBuffer IS
+    GENERIC (buffer_size : INTEGER := 16);
+    PORT (
+        data_in : IN STD_LOGIC_VECTOR(buffer_size - 1 DOWNTO 0); -- Input data
+        enable : IN STD_LOGIC; -- Enable signal for the buffer
+        data_out : OUT STD_LOGIC_VECTOR(buffer_size - 1 DOWNTO 0) -- Output data
     );
-end TriStateBuffer;
+END TriStateBuffer;
 
-architecture Behavioral of TriStateBuffer is
-begin
-    process(data_in, enable)
-    begin
-        if enable = '1' then
-            data_out <= data_in;  -- Drive the signal
-        else
-            data_out <= (others => 'Z');  -- High impedance
-        end if;
-    end process;
-end Behavioral;
+ARCHITECTURE Behavioral OF TriStateBuffer IS
+BEGIN
+    PROCESS (data_in, enable)
+    BEGIN
+        IF enable = '1' THEN
+            data_out <= data_in; -- Drive the signal
+        ELSE
+            data_out <= (OTHERS => 'Z'); -- High impedance
+        END IF;
+    END PROCESS;
+END Behavioral;

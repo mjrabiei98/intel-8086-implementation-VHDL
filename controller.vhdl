@@ -31,7 +31,8 @@ ENTITY controller IS
         si_en, si_tri_en : OUT STD_LOGIC;
         di_en, di_tri_en : OUT STD_LOGIC;
         mem_write_en : OUT STD_LOGIC;
-        disable_inst_fetch : OUT STD_LOGIC);
+        disable_inst_fetch : OUT STD_LOGIC;
+        number_of_pop : out integer);
 
 END ENTITY controller;
 
@@ -71,7 +72,8 @@ BEGIN
         si_en<= '0'; si_tri_en <= '0';
         di_en<= '0'; di_tri_en <= '0';
         mem_write_en <= '0';
-        disable_inst_fetch <= '0';    
+        disable_inst_fetch <= '0';
+        number_of_pop <= 1;    
         CASE pstate IS
 
             WHEN idle =>
