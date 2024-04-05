@@ -195,10 +195,10 @@ BEGIN
                 mem_write_en <= '1';
                 nstate <= fetch;
 
-            -- WHEN move_mem_reg_state =>
-            --     pop_from_queue <= '1';
-            --     nstate <= fetch;
-            --     ------
+            WHEN move_mem_reg_state =>
+                pop_from_queue <= '1';
+                nstate <= fetch;
+
         END CASE;
     END PROCESS;
 
