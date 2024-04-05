@@ -169,6 +169,7 @@ BEGIN
     temp <= STD_LOGIC_VECTOR(unsigned(a) * 16 + unsigned(b));
     address_out <= temp(15 DOWNTO 0);
 END ARCHITECTURE behavioral;
+
 LIBRARY IEEE;
 USE IEEE.STD_LOGIC_1164.ALL;
 ENTITY mux IS

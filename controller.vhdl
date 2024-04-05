@@ -32,7 +32,8 @@ ENTITY controller IS
         di_en, di_tri_en : OUT STD_LOGIC;
         mem_write_en : OUT STD_LOGIC;
         disable_inst_fetch : OUT STD_LOGIC;
-        number_of_pop : out integer);
+        number_of_pop : out integer;
+        adr_gen_mux2_sel : out std_logic_vector(1 downto 0));
 
 END ENTITY controller;
 
@@ -73,7 +74,9 @@ BEGIN
         di_en<= '0'; di_tri_en <= '0';
         mem_write_en <= '0';
         disable_inst_fetch <= '0';
-        number_of_pop <= 1;    
+        number_of_pop <= 1; 
+        adr_gen_mux2_sel<= "00";
+
         CASE pstate IS
 
             WHEN idle =>
@@ -113,6 +116,8 @@ BEGIN
                 di_tri_en <= '0';
                 mem_write_en <= '0';
                 disable_inst_fetch <= '0';
+                number_of_pop <= 1; 
+                adr_gen_mux2_sel<= "00";
 
             WHEN fetch =>
 

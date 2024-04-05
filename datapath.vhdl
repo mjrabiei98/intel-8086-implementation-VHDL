@@ -26,7 +26,8 @@ entity datapath is
          di_en, di_tri_en : in std_logic;
          data_out: out std_logic_vector(15 downto 0);
          disable_inst_fetch : in std_logic;
-         number_of_pop : in integer);
+         number_of_pop : in integer;
+         adr_gen_mux2_sel : in std_logic_vector(1 downto 0));
 
 end entity datapath;
 
@@ -41,6 +42,7 @@ architecture behavioral of datapath is
     signal inc_out : std_logic_vector (15 downto 0);
     signal IP_en : std_logic;
     signal adr_gen_mux1_out : std_logic_vector (15 downto 0);
+    signal adr_gen_mux2_out : std_logic_vector (15 downto 0);
     signal queue_full : std_logic;
     signal queue_empty : std_logic;
     signal queue_out : std_logic_vector(47 downto 0);
@@ -85,9 +87,13 @@ begin
         generic map(16)
         port map(ES_out, CS_out, SS_out, DS_out, adr_gen_mux1_sel, adr_gen_mux1_out);
 
+    dr_gen_mux1: entity work.mux(behavioral)
+        generic map(16)
+        port map(IP_out, data_bus_16, SS_out, DS_out, adr_gen_mux2_sel, adr_gen_mux2_out);
+
 
     address_generator: entity work.address_calculator(behavioral)
-            port map(adr_gen_mux1_out, IP_out, address_out);
+            port map(adr_gen_mux1_out, adr_gen_mux2_out, address_out);
 
     push_queue <= not disable_inst_fetch ;
 
