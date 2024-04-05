@@ -7,6 +7,8 @@ use IEEE.NUMERIC_STD.ALL;
 
 entity controller is 
 
+    generic(move_mem_reg_opcd : std_logic_vector := "10010");
+
     port (clk, rst: in std_logic; ES_tri : out std_logic; adr_gen_mux1_sel : out std_logic_vector(1 downto 0); 
          queue_out_to_ctrl : in std_logic_vector(7 downto 0);
          inst_reg_out : in std_logic_vector(7 downto 0);
@@ -29,7 +31,7 @@ end entity controller;
 
 architecture behavioral of controller is
 
-    TYPE state IS (idle);
+    TYPE state IS (idle,fetch, pop_state, move_mem_reg_state);
 	SIGNAL pstate, nstate :state := idle;
 
 begin
@@ -65,59 +67,37 @@ begin
     si_en<= '0'; si_tri_en <= '0';
     di_en<= '0'; di_tri_en <= '0';
     mem_write_en <= '0';
-    disable_inst_fetch <= '0';
-
-    --      sel<= '0';            load<= '0';              counter_en<= '0';      mbr_en<= '0';       done<= '0';
-    --      init <='0';           counterW_en<= '0';       
+    disable_inst_fetch <= '0';    
 	
 	
-	-- 	CASE pstate IS  
+		CASE pstate IS  
 
-	-- 		WHEN idle =>
+			WHEN idle =>
+				
+                nstate <= fetch; 	
 
-    --             pipe_out <= '1';
-	-- 			done <= '0';
-    --             load <= '0';
-    --             mbr_en <= '0';
-    --             sel <='0';
-    --             counter_en <='0';
-	-- 			IF (start='1' AND start'EVENT) THEN 
-	-- 				nstate <= init_bias; 
-	-- 			ELSE
-	-- 			    nstate <= idle; 
-	-- 			END IF;		
+			WHEN fetch =>
 
-	-- 		WHEN init_bias =>
-
-    --             pipe_out <= '0';
-    --             sel <= '0';
-    --             load <= '1'; 
-    --             counter_en <='0';
-    --             init <= '1';
-    --             nstate <= MAC; 	
+                inst_reg_en <= '1';
+                nstate <= pop_state; 	
             
-	-- 		WHEN MAC =>
+            WHEN pop_state =>
 
-    --              init <= '0';
-    --              sel <= '1';
-    --              counter_en <='1';
-    --              counterW_en <='1';
-    --              load <='1';
+                inst_reg_en <= '0';
 
-	-- 			if (cnt=NumOfSteps) then 
+                if(inst_reg_out(7 downto 3) = move_mem_reg_opcd ) then
 
-	-- 				nstate<= ready;
-                    
+                    nstate <= move_mem_reg_state;
 
-    --             else
-                    
-    --                 nstate<= MAC;
+                else
+                    nstate <= fetch; 
+                end if;
+            
+            WHEN move_mem_reg_state =>
+                nstate <= fetch;
 
-    --             end if;
-
-	-- 		WHEN ready =>
 	
-    --     END CASE;				
+        END CASE;				
 	END PROCESS;
 
 

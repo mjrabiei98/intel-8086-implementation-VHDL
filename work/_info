@@ -16,7 +16,7 @@ L166
 VJQ84A7hSJjOfb<kUALi<e2
 Z7 OV;C;10.1d;51
 32
-Z8 !s108 1712225326.864000
+Z8 !s108 1712302116.433000
 Z9 !s90 -reportprogress|300|-work|work|-2002|-explicit|C:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW/HW1/code/elements.vhdl|
 Z10 !s107 C:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW/HW1/code/elements.vhdl|
 Z11 o-work work -2002 -explicit -O0
@@ -78,7 +78,7 @@ R12
 !s100 4Pl>B]O_390nId:3M5Khl3
 !i10b 1
 Econtroller
-Z16 w1712224332
+Z16 w1712302113
 R1
 Z17 DPx4 ieee 18 std_logic_unsigned 0 22 RYmj;=TK`k=k>D@Cz`zoB3
 Z18 DPx4 ieee 15 std_logic_arith 0 22 4`Y?g_lkdn;7UL9IiJck01
@@ -89,15 +89,15 @@ Z19 8C:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW
 Z20 FC:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW/HW1/code/controller.vhdl
 l0
 L8
-VH^zL49H@PlV04_CPj9n=n1
+V9dbYCU>;JBfR:o8oG6KSk3
 R7
 32
-Z21 !s108 1712225327.196000
+Z21 !s108 1712302116.724000
 Z22 !s90 -reportprogress|300|-work|work|-2002|-explicit|C:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW/HW1/code/controller.vhdl|
 Z23 !s107 C:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW/HW1/code/controller.vhdl|
 R11
 R12
-!s100 IQM9m7IcZ[>CzJX[RnzIg3
+!s100 OJ14dl9GAV@_D7<F73kaJ1
 !i10b 1
 Abehavioral
 R1
@@ -105,11 +105,10 @@ R17
 R18
 R2
 R3
-Z24 DEx4 work 10 controller 0 22 H^zL49H@PlV04_CPj9n=n1
-l35
-L30
-VAB0@I3PKXbbm:fLo:jFJ[3
-!s100 7U9c@:X=8FbXfAj5MaZl62
+Z24 DEx4 work 10 controller 0 22 9dbYCU>;JBfR:o8oG6KSk3
+l37
+L32
+VNb2EI58ECjoHY7RS5^@TD1
 R7
 32
 R21
@@ -117,6 +116,7 @@ R22
 R23
 R11
 R12
+!s100 RX`lQ=jKJ>:hI;?_Y6BBN3
 !i10b 1
 Edatapath
 Z25 w1712224326
@@ -133,7 +133,7 @@ L8
 V]FdfiBaoni9n?1>9F?=aa2
 R7
 32
-Z28 !s108 1712225327.133000
+Z28 !s108 1712302116.669000
 Z29 !s90 -reportprogress|300|-work|work|-2002|-explicit|C:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW/HW1/code/datapath.vhdl|
 Z30 !s107 C:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW/HW1/code/datapath.vhdl|
 R11
@@ -287,7 +287,7 @@ L11
 VB]I`2[nz7ZYSj3IScjo0?3
 R7
 32
-Z44 !s108 1712225327.069000
+Z44 !s108 1712302116.609000
 Z45 !s90 -reportprogress|300|-work|work|-2002|-explicit|C:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW/HW1/code/memory.vhdl|
 Z46 !s107 C:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW/HW1/code/memory.vhdl|
 R11
@@ -399,7 +399,7 @@ VZ]eTz1]^U=8Qkbz5zV9L<1
 R7
 32
 !i10b 1
-Z53 !s108 1712225327.244000
+Z53 !s108 1712302116.779000
 Z54 !s90 -reportprogress|300|-work|work|-2002|-explicit|C:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW/HW1/code/8086_processor.vhdl|
 Z55 !s107 C:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW/HW1/code/8086_processor.vhdl|
 R11
@@ -599,7 +599,7 @@ L4
 VB6JRKX>U3F7^SJc39KAPS0
 R7
 32
-Z67 !s108 1712225327.021000
+Z67 !s108 1712302116.561000
 R63
 R64
 R11
