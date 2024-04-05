@@ -5,7 +5,7 @@ use IEEE.STD_LOGIC_UNSIGNED.ALL;
 use IEEE.NUMERIC_STD.ALL;
 
 entity reg is 
-    generic (register_size : integer := 8; defualt_value : std_logic_vector(15 downto 0) := "0000000000000000");
+    generic (register_size : integer := 8);
     port (clk, rst, en: in std_logic; d : in std_logic_vector (register_size - 1 downto 0); q : out std_logic_vector (register_size-1 downto 0 ) );
 end entity reg;
 
@@ -13,7 +13,7 @@ architecture behavioral of reg is
 begin
     process(rst,clk)
     begin 
-        if(rst = '1') then q <= defualt_value; 
+        if(rst = '1') then q <= (others => '0'); 
         elsif (clk'event and clk = '1' and en = '1') then q <= d;
         end if;
     end process;
@@ -170,8 +170,10 @@ entity address_calculator is
 end entity address_calculator;
 
 architecture behavioral of address_calculator is
+    signal temp: std_logic_vector(31 downto 0);
 begin
-    address_out <= std_logic_vector(unsigned(a) + unsigned(b));
+    temp <= std_logic_vector(unsigned(a) * 16 + unsigned(b));
+    address_out <= temp(15 downto 0);
 end architecture behavioral;
 
 

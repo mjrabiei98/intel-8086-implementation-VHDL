@@ -67,7 +67,7 @@ begin
         generic map (16)
         port map(clk, rst, '0', segment_input, SS_out);
     DS : entity work.reg(behavioral)
-        generic map (16, "0000000000010000")
+        generic map (16)
         port map(clk, rst, '0', segment_input, DS_out);
 
     IP : entity work.reg(behavioral)
