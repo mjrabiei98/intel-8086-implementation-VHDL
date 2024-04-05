@@ -16,7 +16,7 @@ ENTITY controller IS
         clk, rst : IN STD_LOGIC;
         ES_tri : OUT STD_LOGIC;
         adr_gen_mux1_sel : OUT STD_LOGIC_VECTOR(1 DOWNTO 0);
-        queue_out_to_ctrl : IN STD_LOGIC_VECTOR(7 DOWNTO 0);
+        queue_out_to_ctrl : IN STD_LOGIC_VECTOR(47 DOWNTO 0);
         inst_reg_out : IN STD_LOGIC_VECTOR(7 DOWNTO 0);
         inst_reg_en : OUT STD_LOGIC;
         pop_from_queue, alu_temp_reg1_en, alu_temp_reg2_en : OUT STD_LOGIC;
@@ -182,13 +182,13 @@ BEGIN
             WHEN move_reg_mem_state =>
                 
                 if (queue_out_to_ctrl(5 DOWNTO 3) = AX_reg_opcd) then
-                    ax_tri_en <= 1;
+                    ax_tri_en <= '1';
                 elsif (queue_out_to_ctrl(5 DOWNTO 3) = BX_reg_opcd) then
-                    bx_tri_en <= 1;
+                    bx_tri_en <= '1';
                 elsif (queue_out_to_ctrl(5 DOWNTO 3) = CX_reg_opcd) then
-                    cx_tri_en <= 1;
+                    cx_tri_en <= '1';
                 elsif (queue_out_to_ctrl(5 DOWNTO 3) = DX_reg_opcd) then
-                    dx_tri_en <= 1;
+                    dx_tri_en <= '1';
                 end if;
                     
                 -- pop_from_queue <= '1';

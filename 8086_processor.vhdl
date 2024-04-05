@@ -17,7 +17,7 @@ architecture behavioral of processor is
 
     signal ES_tri : std_logic; 
     signal adr_gen_mux1_sel : std_logic_vector(1 downto 0); 
-    signal queue_out_to_ctrl : std_logic_vector(7 downto 0);
+    signal queue_out_to_ctrl : std_logic_vector(47 downto 0);
     signal inst_reg_out : std_logic_vector(7 downto 0);
     signal inst_reg_en : std_logic;
     signal pop_from_queue, alu_temp_reg1_en, alu_temp_reg2_en : std_logic;

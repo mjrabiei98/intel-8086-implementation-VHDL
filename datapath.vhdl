@@ -10,7 +10,7 @@ entity datapath is
     port (clk, rst, ES_tri : in std_logic; adr_gen_mux1_sel : in std_logic_vector(1 downto 0); 
          address_out : out std_logic_vector(15 downto 0);
          mem_data_in : in std_logic_vector(15 downto 0);
-         queue_out_to_ctrl : out std_logic_vector(7 downto 0);
+         queue_out_to_ctrl : out std_logic_vector(47 downto 0);
          inst_reg_out : out std_logic_vector(7 downto 0);
          inst_reg_en : in std_logic;
          pop_from_queue, alu_temp_reg1_en, alu_temp_reg2_en : in std_logic;
@@ -42,7 +42,7 @@ architecture behavioral of datapath is
     signal adr_gen_mux1_out : std_logic_vector (15 downto 0);
     signal queue_full : std_logic;
     signal queue_empty : std_logic;
-    signal queue_out : std_logic_vector(7 downto 0);
+    signal queue_out : std_logic_vector(47 downto 0);
     signal data_bus_16 : std_logic_vector(15 downto 0);
     signal push_queue : std_logic;
     signal alu_temp_reg1_out : std_logic_vector(15 downto 0);
@@ -97,7 +97,7 @@ begin
 
     inst_reg: entity work.reg(behavioral)
         generic map (8)
-        port map(clk, rst, inst_reg_en, queue_out, inst_reg_out);
+        port map(clk, rst, inst_reg_en, queue_out(7 downto 0), inst_reg_out);
 
 
     alu_temp_reg1: entity work.reg(behavioral)
