@@ -11,7 +11,8 @@ ENTITY controller IS
         DX_reg_opcd : STD_LOGIC_VECTOR(2 DOWNTO 0) := "010";
         BX_reg_opcd : STD_LOGIC_VECTOR(2 DOWNTO 0) := "011";
         move_mem_reg_opcd : STD_LOGIC_VECTOR(4 DOWNTO 0) := "10010";
-        move_imd_opcd : STD_LOGIC_VECTOR(3 DOWNTO 0) := "1011");
+        move_imd_opcd : STD_LOGIC_VECTOR(3 DOWNTO 0) := "1011";
+        mul_reg_reg_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "1111011");
 
     PORT (
         clk, rst : IN STD_LOGIC;
@@ -43,7 +44,9 @@ END ENTITY controller;
 
 ARCHITECTURE behavioral OF controller IS
 
-    TYPE state IS (idle, fetch, pop_state, move_reg_reg_state, move_reg_mem_state, move_mem_reg_state, mevoe_immediate1, mevoe_immediate2);
+    TYPE state IS (idle, fetch, pop_state, move_reg_reg_state, move_reg_mem_state,
+        move_mem_reg_state, mevoe_immediate1, mevoe_immediate2, mul_reg_reg_state1,
+        mul_reg_reg_state2, mul_reg_reg_state3);
     SIGNAL pstate, nstate : state := idle;
 
 BEGIN
@@ -164,6 +167,9 @@ BEGIN
                 ELSIF (inst_reg_out(7 DOWNTO 4) = move_imd_opcd) THEN
                     nstate <= mevoe_immediate1;
 
+                ELSIF (inst_reg_out(7 DOWNTO 1) = mul_reg_reg_opcd) THEN
+                    nstate <= mul_reg_reg_state1;
+
                 ELSE
                     nstate <= fetch;
 
@@ -280,6 +286,20 @@ BEGIN
                 pop_from_queue <= '1';
                 number_of_pop <= 2;
                 nstate <= fetch;
+
+            WHEN mul_reg_reg_state1 =>
+                nstate <= mul_reg_reg_state2;
+                -- load first reg to temp 1
+            WHEN mul_reg_reg_state2 =>
+                nstate <= mul_reg_reg_state3;
+                -- load second register to temp2
+            WHEN mul_reg_reg_state3 =>
+                nstate <= fetch;
+                -- calculate the alu
+                -- load low part to ax
+
+            -- load second part to cx
+            -- load flags
 
         END CASE;
     END PROCESS;

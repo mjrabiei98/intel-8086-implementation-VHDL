@@ -152,6 +152,7 @@ END ARCHITECTURE behavioral;
 --     q_h <= temp(15 downto 8);
 --     q_l <= temp(7 downto 0);
 -- end architecture gate_level;
+
 LIBRARY IEEE;
 USE IEEE.STD_LOGIC_1164.ALL;
 USE IEEE.NUMERIC_STD.ALL;
