@@ -28,7 +28,8 @@ entity datapath is
          disable_inst_fetch : in std_logic;
          number_of_pop : in integer;
          adr_gen_mux2_sel : in std_logic_vector(1 downto 0);
-         memory_bus_tri: in std_logic);
+         memory_bus_tri: in std_logic;
+         queue_empty : out std_logic);
 
 end entity datapath;
 
@@ -45,7 +46,6 @@ architecture behavioral of datapath is
     signal adr_gen_mux1_out : std_logic_vector (15 downto 0);
     signal adr_gen_mux2_out : std_logic_vector (15 downto 0);
     signal queue_full : std_logic;
-    signal queue_empty : std_logic;
     signal queue_out : std_logic_vector(47 downto 0);
     signal data_bus_16 : std_logic_vector(15 downto 0);
     signal push_queue : std_logic;

@@ -10,7 +10,8 @@ ENTITY controller IS
         CX_reg_opcd : STD_LOGIC_VECTOR(2 DOWNTO 0) := "001";
         DX_reg_opcd : STD_LOGIC_VECTOR(2 DOWNTO 0) := "010";
         BX_reg_opcd : STD_LOGIC_VECTOR(2 DOWNTO 0) := "011";
-        move_mem_reg_opcd : STD_LOGIC_VECTOR(4 DOWNTO 0) := "10010");
+        move_mem_reg_opcd : STD_LOGIC_VECTOR(4 DOWNTO 0) := "10010";
+        move_imd_opcd : STD_LOGIC_VECTOR(3 DOWNTO 0) := "1011");
 
     PORT (
         clk, rst : IN STD_LOGIC;
@@ -34,13 +35,14 @@ ENTITY controller IS
         disable_inst_fetch : OUT STD_LOGIC;
         number_of_pop : OUT INTEGER;
         adr_gen_mux2_sel : OUT STD_LOGIC_VECTOR(1 DOWNTO 0);
-        memory_bus_tri: OUT STD_LOGIC);
+        memory_bus_tri : OUT STD_LOGIC;
+        queue_empty : in STD_LOGIC);
 
 END ENTITY controller;
 
 ARCHITECTURE behavioral OF controller IS
 
-    TYPE state IS (idle, fetch, pop_state, move_reg_reg_state, move_reg_mem_state, move_mem_reg_state);
+    TYPE state IS (idle, fetch, pop_state, move_reg_reg_state, move_reg_mem_state, move_mem_reg_state, mevoe_immediate1);
     SIGNAL pstate, nstate : state := idle;
 
 BEGIN
@@ -141,8 +143,11 @@ BEGIN
             WHEN fetch =>
 
                 inst_reg_en <= '1';
-                nstate <= pop_state;
-
+                IF queue_empty = '1'THEN
+                    nstate <= fetch;
+                ELSE
+                    nstate <= pop_state;
+                END IF;
             WHEN pop_state =>
 
                 inst_reg_en <= '0';
@@ -155,8 +160,12 @@ BEGIN
                     ELSE -- mem to reg
                         nstate <= move_mem_reg_state;
                     END IF;
+                ELSIF (inst_reg_out(7 DOWNTO 4) = move_imd_opcd) THEN
+                    nstate <= mevoe_immediate1;
+
                 ELSE
                     nstate <= fetch;
+
                 END IF;
 
             WHEN move_reg_reg_state =>
@@ -220,6 +229,7 @@ BEGIN
                 adr_gen_mux2_sel <= "01";
                 adr_gen_mux1_sel <= "11";
                 nstate <= fetch;
+                disable_inst_fetch <= '1';
 
             WHEN move_mem_reg_state =>
 
@@ -239,7 +249,9 @@ BEGIN
                 adr_gen_mux1_sel <= "11";
                 pop_from_queue <= '1';
                 nstate <= fetch;
+                disable_inst_fetch <= '1';
 
+            WHEN mevoe_immediate1 =>
         END CASE;
     END PROCESS;
 
