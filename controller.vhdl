@@ -12,7 +12,10 @@ ENTITY controller IS
         BX_reg_opcd : STD_LOGIC_VECTOR(2 DOWNTO 0) := "011";
         move_mem_reg_opcd : STD_LOGIC_VECTOR(4 DOWNTO 0) := "10010";
         move_imd_opcd : STD_LOGIC_VECTOR(3 DOWNTO 0) := "1011";
-        mul_reg_reg_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "1111011");
+        inc_reg_opcd : STD_LOGIC_VECTOR(4 DOWNTO 0) := "01000";
+        dec_reg_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "1111111";
+        mul_reg_reg_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "1111011";
+        loop_opcd : STD_LOGIC_VECTOR(7 DOWNTO 0) := "11100010");
 
     PORT (
         clk, rst : IN STD_LOGIC;
@@ -300,6 +303,7 @@ BEGIN
 
             -- load second part to cx
             -- load flags
+            -- pop
 
         END CASE;
     END PROCESS;
