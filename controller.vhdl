@@ -36,7 +36,8 @@ ENTITY controller IS
         number_of_pop : OUT INTEGER;
         adr_gen_mux2_sel : OUT STD_LOGIC_VECTOR(1 DOWNTO 0);
         memory_bus_tri : OUT STD_LOGIC;
-        queue_empty : in STD_LOGIC);
+        queue_empty : IN STD_LOGIC;
+        queue_to_bus_tri : OUT STD_LOGIC);
 
 END ENTITY controller;
 
@@ -253,13 +254,33 @@ BEGIN
 
             WHEN mevoe_immediate1 =>
                 nstate <= mevoe_immediate2;
+                IF (inst_reg_out(2 DOWNTO 0) = AX_reg_opcd) THEN
+                    ax_en_l <= '1';
+                ELSIF (inst_reg_out(2 DOWNTO 0) = BX_reg_opcd) THEN
+                    bx_en_l <= '1';
+                ELSIF (inst_reg_out(2 DOWNTO 0) = CX_reg_opcd) THEN
+                    cx_en_l <= '1';
+                ELSIF (inst_reg_out(2 DOWNTO 0) = DX_reg_opcd) THEN
+                    dx_en_l <= '1';
+                END IF;
+                queue_to_bus_tri <= '1';
 
             WHEN mevoe_immediate2 =>
+
+                queue_to_bus_tri <= '1';
+                IF (inst_reg_out(2 DOWNTO 0) = AX_reg_opcd) THEN
+                    ax_en_h <= '1';
+                ELSIF (inst_reg_out(2 DOWNTO 0) = BX_reg_opcd) THEN
+                    bx_en_h <= '1';
+                ELSIF (inst_reg_out(2 DOWNTO 0) = CX_reg_opcd) THEN
+                    cx_en_h <= '1';
+                ELSIF (inst_reg_out(2 DOWNTO 0) = DX_reg_opcd) THEN
+                    dx_en_h <= '1';
+                END IF;
                 pop_from_queue <= '1';
                 number_of_pop <= 2;
                 nstate <= fetch;
 
-                
         END CASE;
     END PROCESS;
 

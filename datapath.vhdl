@@ -29,7 +29,8 @@ entity datapath is
          number_of_pop : in integer;
          adr_gen_mux2_sel : in std_logic_vector(1 downto 0);
          memory_bus_tri: in std_logic;
-         queue_empty : out std_logic);
+         queue_empty : out std_logic;
+         queue_to_bus_tri: in std_logic);
 
 end entity datapath;
 
@@ -123,15 +124,6 @@ begin
     ALU_tri : entity work.TriStateBuffer(behavioral)
             port map(alu_out, ALU_tri_en, data_bus_16);
 
-
-            -- entity x_registers is
-            --     port (clk, rst, en,en_l,en_h: in std_logic; 
-            --           d : in std_logic_vector (15 downto 0); 
-            --           q : out std_logic_vector (15 downto 0));
-            
-            -- end entity x_registers;
-    
-
     AX : entity work.x_registers(behavioral)
                 port map(clk, rst, ax_en, ax_en_l, ax_en_h,data_bus_16, ax_out);
 
@@ -155,12 +147,6 @@ begin
 
     DX_tri : entity work.TriStateBuffer(behavioral)
                 port map(dx_out, dx_tri_en, data_bus_16);
-
-
-            --     entity reg is 
-            --     generic (register_size : integer := 8);
-            --     port (clk, rst, en: in std_logic; d : in std_logic_vector (register_size - 1 downto 0); q : out std_logic_vector (register_size-1 downto 0 ) );
-            -- end entity reg;
 
     SP : entity work.reg(behavioral)
                 generic map(16)
