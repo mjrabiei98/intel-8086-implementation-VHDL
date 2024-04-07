@@ -1,192 +1,175 @@
-library IEEE;
-use IEEE.STD_LOGIC_1164.ALL;
-use IEEE.STD_LOGIC_ARITH.ALL;
-use IEEE.STD_LOGIC_UNSIGNED.ALL;
-use IEEE.NUMERIC_STD.ALL;
+LIBRARY IEEE;
+USE IEEE.STD_LOGIC_1164.ALL;
+USE IEEE.STD_LOGIC_ARITH.ALL;
+USE IEEE.STD_LOGIC_UNSIGNED.ALL;
+USE IEEE.NUMERIC_STD.ALL;
+ENTITY datapath IS
 
+    PORT (
+        clk, rst, ES_tri : IN STD_LOGIC;
+        adr_gen_mux1_sel : IN STD_LOGIC_VECTOR(1 DOWNTO 0);
+        address_out : OUT STD_LOGIC_VECTOR(15 DOWNTO 0);
+        mem_data_in : IN STD_LOGIC_VECTOR(15 DOWNTO 0);
+        queue_out_to_ctrl : OUT STD_LOGIC_VECTOR(47 DOWNTO 0);
+        inst_reg_out : OUT STD_LOGIC_VECTOR(7 DOWNTO 0);
+        inst_reg_en : IN STD_LOGIC;
+        pop_from_queue, alu_temp_reg1_en, alu_temp_reg2_en : IN STD_LOGIC;
+        alu_op_sel : IN STD_LOGIC_VECTOR(3 DOWNTO 0);
+        ALU_tri_en : IN STD_LOGIC;
+        ax_en, ax_en_l, ax_en_h, ax_tri_en : IN STD_LOGIC;
+        bx_en, bx_en_l, bx_en_h, bx_tri_en : IN STD_LOGIC;
+        cx_en, cx_en_l, cx_en_h, cx_tri_en : IN STD_LOGIC;
+        dx_en, dx_en_l, dx_en_h, dx_tri_en : IN STD_LOGIC;
+        sp_en, sp_tri_en : IN STD_LOGIC;
+        bp_en, bp_tri_en : IN STD_LOGIC;
+        si_en, si_tri_en : IN STD_LOGIC;
+        di_en, di_tri_en : IN STD_LOGIC;
+        data_out : OUT STD_LOGIC_VECTOR(15 DOWNTO 0);
+        disable_inst_fetch : IN STD_LOGIC;
+        number_of_pop : IN INTEGER;
+        adr_gen_mux2_sel : IN STD_LOGIC_VECTOR(1 DOWNTO 0);
+        memory_bus_tri : IN STD_LOGIC;
+        queue_empty : OUT STD_LOGIC;
+        queue_to_bus_tri : IN STD_LOGIC);
 
-entity datapath is 
+END ENTITY datapath;
 
-    port (clk, rst, ES_tri : in std_logic; adr_gen_mux1_sel : in std_logic_vector(1 downto 0); 
-         address_out : out std_logic_vector(15 downto 0);
-         mem_data_in : in std_logic_vector(15 downto 0);
-         queue_out_to_ctrl : out std_logic_vector(47 downto 0);
-         inst_reg_out : out std_logic_vector(7 downto 0);
-         inst_reg_en : in std_logic;
-         pop_from_queue, alu_temp_reg1_en, alu_temp_reg2_en : in std_logic;
-         alu_op_sel : in std_logic_vector(3 downto 0);
-         ALU_tri_en : in std_logic;
-         ax_en, ax_en_l, ax_en_h, ax_tri_en : in std_logic;
-         bx_en, bx_en_l, bx_en_h, bx_tri_en : in std_logic;
-         cx_en, cx_en_l, cx_en_h, cx_tri_en : in std_logic;
-         dx_en, dx_en_l, dx_en_h, dx_tri_en : in std_logic;
-         sp_en, sp_tri_en : in std_logic;
-         bp_en, bp_tri_en : in std_logic;
-         si_en, si_tri_en : in std_logic;
-         di_en, di_tri_en : in std_logic;
-         data_out: out std_logic_vector(15 downto 0);
-         disable_inst_fetch : in std_logic;
-         number_of_pop : in integer;
-         adr_gen_mux2_sel : in std_logic_vector(1 downto 0);
-         memory_bus_tri: in std_logic;
-         queue_empty : out std_logic;
-         queue_to_bus_tri: in std_logic);
+ARCHITECTURE behavioral OF datapath IS
 
-end entity datapath;
+    SIGNAL ES_out : STD_LOGIC_VECTOR (15 DOWNTO 0);
+    SIGNAL CS_out : STD_LOGIC_VECTOR (15 DOWNTO 0);
+    SIGNAL SS_out : STD_LOGIC_VECTOR (15 DOWNTO 0);
+    SIGNAL DS_out : STD_LOGIC_VECTOR (15 DOWNTO 0);
+    SIGNAL IP_out : STD_LOGIC_VECTOR (15 DOWNTO 0);
+    SIGNAL segment_input : STD_LOGIC_VECTOR (15 DOWNTO 0);
+    SIGNAL inc_out : STD_LOGIC_VECTOR (15 DOWNTO 0);
+    SIGNAL IP_en : STD_LOGIC;
+    SIGNAL adr_gen_mux1_out : STD_LOGIC_VECTOR (15 DOWNTO 0);
+    SIGNAL adr_gen_mux2_out : STD_LOGIC_VECTOR (15 DOWNTO 0);
+    SIGNAL queue_full : STD_LOGIC;
+    SIGNAL queue_out : STD_LOGIC_VECTOR(47 DOWNTO 0);
+    SIGNAL data_bus_16 : STD_LOGIC_VECTOR(15 DOWNTO 0);
+    SIGNAL push_queue : STD_LOGIC;
+    SIGNAL alu_temp_reg1_out : STD_LOGIC_VECTOR(15 DOWNTO 0);
+    SIGNAL alu_temp_reg2_out : STD_LOGIC_VECTOR(15 DOWNTO 0);
+    SIGNAL alu_out : STD_LOGIC_VECTOR(15 DOWNTO 0);
+    SIGNAL alu_carry_out : STD_LOGIC;
+    SIGNAL alu_zero : STD_LOGIC;
+    SIGNAL ax_out, bx_out, cx_out, dx_out, sp_out, bp_out, si_out, di_out : STD_LOGIC_VECTOR(15 DOWNTO 0);
+BEGIN
 
-architecture behavioral of datapath is
+    ES : ENTITY work.reg(behavioral)
+        GENERIC MAP(16)
+        PORT MAP(clk, rst, '0', segment_input, ES_out);
+    CS : ENTITY work.reg(behavioral)
+        GENERIC MAP(16)
+        PORT MAP(clk, rst, '0', segment_input, CS_out);
+    SS : ENTITY work.reg(behavioral)
+        GENERIC MAP(16)
+        PORT MAP(clk, rst, '0', segment_input, SS_out);
+    DS : ENTITY work.reg(behavioral)
+        GENERIC MAP(16)
+        PORT MAP(clk, rst, '0', segment_input, DS_out);
 
-    signal ES_out : std_logic_vector (15 downto 0);
-    signal CS_out : std_logic_vector (15 downto 0);
-    signal SS_out : std_logic_vector (15 downto 0);
-    signal DS_out : std_logic_vector (15 downto 0);
-    signal IP_out : std_logic_vector (15 downto 0);
-    signal segment_input : std_logic_vector (15 downto 0);
-    signal inc_out : std_logic_vector (15 downto 0);
-    signal IP_en : std_logic;
-    signal adr_gen_mux1_out : std_logic_vector (15 downto 0);
-    signal adr_gen_mux2_out : std_logic_vector (15 downto 0);
-    signal queue_full : std_logic;
-    signal queue_out : std_logic_vector(47 downto 0);
-    signal data_bus_16 : std_logic_vector(15 downto 0);
-    signal push_queue : std_logic;
-    signal alu_temp_reg1_out : std_logic_vector(15 downto 0);
-    signal alu_temp_reg2_out : std_logic_vector(15 downto 0);
-    signal alu_out : std_logic_vector(15 downto 0);
-    signal alu_carry_out : std_logic;
-    signal alu_zero : std_logic;
-    signal ax_out, bx_out,cx_out,dx_out, sp_out,bp_out,si_out,di_out : std_logic_vector(15 downto 0);
+    IP : ENTITY work.reg(behavioral)
+        GENERIC MAP(16)
+        PORT MAP(clk, rst, IP_en, inc_out, IP_out);
 
+    INC : ENTITY work.incrementor(behavioral)
+        GENERIC MAP(16)
+        PORT MAP(IP_out, inc_out);
 
+    IP_en <= NOT(queue_full OR disable_inst_fetch);
 
+    adr_gen_mux1 : ENTITY work.mux(behavioral)
+        GENERIC MAP(16)
+        PORT MAP(CS_out, ES_out, SS_out, DS_out, adr_gen_mux1_sel, adr_gen_mux1_out);
 
-begin
+    adr_gen_mux2 : ENTITY work.mux(behavioral)
+        GENERIC MAP(16)
+        PORT MAP(IP_out, di_out, Si_out, DS_out, adr_gen_mux2_sel, adr_gen_mux2_out);
+    address_generator : ENTITY work.address_calculator(behavioral)
+        PORT MAP(adr_gen_mux1_out, adr_gen_mux2_out, address_out);
 
-    ES : entity work.reg(behavioral)
-        generic map (16)
-        port map(clk, rst, '0', segment_input, ES_out);
-    CS : entity work.reg(behavioral)
-        generic map (16)
-        port map(clk, rst, '0', segment_input, CS_out);
-    SS : entity work.reg(behavioral)
-        generic map (16)
-        port map(clk, rst, '0', segment_input, SS_out);
-    DS : entity work.reg(behavioral)
-        generic map (16)
-        port map(clk, rst, '0', segment_input, DS_out);
+    push_queue <= NOT disable_inst_fetch;
 
-    IP : entity work.reg(behavioral)
-        generic map (16)
-        port map(clk, rst, IP_en, inc_out, IP_out);
-
-    INC : entity work.incrementor(behavioral)
-            generic map(16)
-            port map(IP_out, inc_out);
-
-    IP_en <= not(queue_full or disable_inst_fetch);
-
-    adr_gen_mux1: entity work.mux(behavioral)
-        generic map(16)
-        port map(CS_out, ES_out, SS_out, DS_out, adr_gen_mux1_sel, adr_gen_mux1_out);
-
-    adr_gen_mux2: entity work.mux(behavioral)
-        generic map(16)
-        port map(IP_out, di_out, Si_out, DS_out, adr_gen_mux2_sel, adr_gen_mux2_out);
-
-
-    address_generator: entity work.address_calculator(behavioral)
-            port map(adr_gen_mux1_out, adr_gen_mux2_out, address_out);
-
-    push_queue <= not disable_inst_fetch ;
-
-    fifo_queue: entity work.queue(behavioral)
-                port map(clk, rst, push_queue, pop_from_queue, mem_data_in, queue_full, queue_empty, queue_out, number_of_pop);
+    fifo_queue : ENTITY work.queue(behavioral)
+        PORT MAP(clk, rst, push_queue, pop_from_queue, mem_data_in, queue_full, queue_empty, queue_out, number_of_pop);
 
     queue_out_to_ctrl <= queue_out;
 
-    inst_reg: entity work.reg(behavioral)
-        generic map (8)
-        port map(clk, rst, inst_reg_en, queue_out(7 downto 0), inst_reg_out);
+    inst_reg : ENTITY work.reg(behavioral)
+        GENERIC MAP(8)
+        PORT MAP(clk, rst, inst_reg_en, queue_out(7 DOWNTO 0), inst_reg_out);
+    alu_temp_reg1 : ENTITY work.reg(behavioral)
+        GENERIC MAP(16)
+        PORT MAP(clk, rst, alu_temp_reg1_en, data_bus_16, alu_temp_reg1_out);
+    alu_temp_reg2 : ENTITY work.reg(behavioral)
+        GENERIC MAP(16)
+        PORT MAP(clk, rst, alu_temp_reg2_en, data_bus_16, alu_temp_reg2_out);
 
+    Arith_logic_unit : ENTITY work.alu(behavioral)
+        PORT MAP(alu_temp_reg1_out, alu_temp_reg2_out, alu_op_sel, alu_out, alu_carry_out, alu_zero);
 
-    alu_temp_reg1: entity work.reg(behavioral)
-        generic map(16)
-        port map(clk, rst, alu_temp_reg1_en, data_bus_16, alu_temp_reg1_out);
+    ALU_tri : ENTITY work.TriStateBuffer(behavioral)
+        PORT MAP(alu_out, ALU_tri_en, data_bus_16);
 
+    AX : ENTITY work.x_registers(behavioral)
+        PORT MAP(clk, rst, ax_en, ax_en_l, ax_en_h, data_bus_16, ax_out);
 
-    alu_temp_reg2: entity work.reg(behavioral)
-        generic map(16)
-        port map(clk, rst, alu_temp_reg2_en, data_bus_16, alu_temp_reg2_out);
+    AX_tri : ENTITY work.TriStateBuffer(behavioral)
+        PORT MAP(ax_out, ax_tri_en, data_bus_16);
 
-    Arith_logic_unit: entity work.alu(behavioral)
-        port map(alu_temp_reg1_out,alu_temp_reg2_out, alu_op_sel, alu_out, alu_carry_out, alu_zero);
+    BX : ENTITY work.x_registers(behavioral)
+        PORT MAP(clk, rst, bx_en, bx_en_l, bx_en_h, data_bus_16, bx_out);
 
-    ALU_tri : entity work.TriStateBuffer(behavioral)
-            port map(alu_out, ALU_tri_en, data_bus_16);
+    BX_tri : ENTITY work.TriStateBuffer(behavioral)
+        PORT MAP(bx_out, bx_tri_en, data_bus_16);
 
-    AX : entity work.x_registers(behavioral)
-                port map(clk, rst, ax_en, ax_en_l, ax_en_h,data_bus_16, ax_out);
+    CX : ENTITY work.x_registers(behavioral)
+        PORT MAP(clk, rst, cx_en, cx_en_l, cx_en_h, data_bus_16, cx_out);
 
-    AX_tri : entity work.TriStateBuffer(behavioral)
-                port map(ax_out, ax_tri_en, data_bus_16);
+    CX_tri : ENTITY work.TriStateBuffer(behavioral)
+        PORT MAP(cx_out, cx_tri_en, data_bus_16);
 
-    BX : entity work.x_registers(behavioral)
-                port map(clk, rst, bx_en, bx_en_l, bx_en_h,data_bus_16, bx_out);
+    DX : ENTITY work.x_registers(behavioral)
+        PORT MAP(clk, rst, dx_en, dx_en_l, dx_en_h, data_bus_16, dx_out);
 
-    BX_tri : entity work.TriStateBuffer(behavioral)
-                port map(bx_out, bx_tri_en, data_bus_16);
+    DX_tri : ENTITY work.TriStateBuffer(behavioral)
+        PORT MAP(dx_out, dx_tri_en, data_bus_16);
 
-    CX : entity work.x_registers(behavioral)
-                port map(clk, rst, cx_en, cx_en_l, cx_en_h,data_bus_16, cx_out);
+    SP : ENTITY work.reg(behavioral)
+        GENERIC MAP(16)
+        PORT MAP(clk, rst, sp_en, data_bus_16, sp_out);
 
-    CX_tri : entity work.TriStateBuffer(behavioral)
-                port map(cx_out, cx_tri_en, data_bus_16);
+    SP_tri : ENTITY work.TriStateBuffer(behavioral)
+        PORT MAP(sp_out, sp_tri_en, data_bus_16);
+    BP : ENTITY work.reg(behavioral)
+        GENERIC MAP(16)
+        PORT MAP(clk, rst, bp_en, data_bus_16, bp_out);
 
-    DX : entity work.x_registers(behavioral)
-                port map(clk, rst, dx_en, dx_en_l, dx_en_h,data_bus_16, dx_out);
+    BP_tri : ENTITY work.TriStateBuffer(behavioral)
+        PORT MAP(bp_out, bp_tri_en, data_bus_16);
 
-    DX_tri : entity work.TriStateBuffer(behavioral)
-                port map(dx_out, dx_tri_en, data_bus_16);
+    SI : ENTITY work.reg(behavioral)
+        GENERIC MAP(16)
+        PORT MAP(clk, rst, si_en, data_bus_16, si_out);
 
-    SP : entity work.reg(behavioral)
-                generic map(16)
-                port map(clk, rst, sp_en, data_bus_16, sp_out);
-    
-    SP_tri: entity work.TriStateBuffer(behavioral)
-                port map(sp_out, sp_tri_en, data_bus_16);
+    SI_tri : ENTITY work.TriStateBuffer(behavioral)
+        PORT MAP(si_out, si_tri_en, data_bus_16);
 
-    
-    BP : entity work.reg(behavioral)
-                generic map(16)
-                port map(clk, rst, bp_en, data_bus_16, bp_out);
-    
-    BP_tri: entity work.TriStateBuffer(behavioral)
-                port map(bp_out, bp_tri_en, data_bus_16);
+    DI : ENTITY work.reg(behavioral)
+        GENERIC MAP(16)
+        PORT MAP(clk, rst, di_en, data_bus_16, di_out);
 
-    
-                
-    SI : entity work.reg(behavioral)
-        generic map(16)
-        port map(clk, rst, si_en, data_bus_16, si_out);
+    DI_tri : ENTITY work.TriStateBuffer(behavioral)
+        PORT MAP(di_out, di_tri_en, data_bus_16);
 
-    SI_tri: entity work.TriStateBuffer(behavioral)
-        port map(si_out, si_tri_en, data_bus_16);
+    memory_to_bus_tri : ENTITY work.TriStateBuffer(behavioral)
+        PORT MAP(mem_data_in, memory_bus_tri, data_bus_16);
 
-
-    
-    DI : entity work.reg(behavioral)
-            generic map(16)
-            port map(clk, rst, di_en, data_bus_16, di_out);
-
-    DI_tri: entity work.TriStateBuffer(behavioral)
-        port map(di_out, di_tri_en, data_bus_16);
-
-    memory_to_bus_tri : entity work.TriStateBuffer(behavioral)
-        port map(mem_data_in, memory_bus_tri, data_bus_16);
+    queue_to_bus_tristate : ENTITY work.TriStateBuffer(behavioral)
+        PORT MAP(queue_out(15 downto 0), queue_to_bus_tri, data_bus_16);
 
     data_out <= data_bus_16;
-     
-        
-
-
-end behavioral ; -- bwhavioralsab
+END behavioral; -- bwhavioralsab

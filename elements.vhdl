@@ -124,7 +124,7 @@ BEGIN
             q <= d;
         ELSIF (clk'event AND clk = '1' AND en_l = '1') THEN
 
-            q_l <= reg_data(15 DOWNTO 0) & d(7 DOWNTO 0);
+            q_l <= reg_data(15 DOWNTO 8) & d(7 DOWNTO 0);
             q <= q_l;
             reg_data <= reg_data(15 DOWNTO 8) & d(7 DOWNTO 0);
 
