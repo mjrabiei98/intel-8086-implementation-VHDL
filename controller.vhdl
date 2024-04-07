@@ -42,7 +42,7 @@ END ENTITY controller;
 
 ARCHITECTURE behavioral OF controller IS
 
-    TYPE state IS (idle, fetch, pop_state, move_reg_reg_state, move_reg_mem_state, move_mem_reg_state, mevoe_immediate1);
+    TYPE state IS (idle, fetch, pop_state, move_reg_reg_state, move_reg_mem_state, move_mem_reg_state, mevoe_immediate1, mevoe_immediate2);
     SIGNAL pstate, nstate : state := idle;
 
 BEGIN
@@ -252,6 +252,14 @@ BEGIN
                 disable_inst_fetch <= '1';
 
             WHEN mevoe_immediate1 =>
+                nstate <= mevoe_immediate2;
+
+            WHEN mevoe_immediate2 =>
+                pop_from_queue <= '1';
+                number_of_pop <= 2;
+                nstate <= fetch;
+
+                
         END CASE;
     END PROCESS;
 
