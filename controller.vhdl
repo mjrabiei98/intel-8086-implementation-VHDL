@@ -32,8 +32,9 @@ ENTITY controller IS
         di_en, di_tri_en : OUT STD_LOGIC;
         mem_write_en : OUT STD_LOGIC;
         disable_inst_fetch : OUT STD_LOGIC;
-        number_of_pop : out integer;
-        adr_gen_mux2_sel : out std_logic_vector(1 downto 0));
+        number_of_pop : OUT INTEGER;
+        adr_gen_mux2_sel : OUT STD_LOGIC_VECTOR(1 DOWNTO 0);
+        memory_bus_tri: OUT STD_LOGIC);
 
 END ENTITY controller;
 
@@ -56,26 +57,43 @@ BEGIN
 
     PROCESS (pstate) BEGIN
 
-        ES_tri <= '0'; 
+        ES_tri <= '0';
         adr_gen_mux1_sel <= "00";
         inst_reg_en <= '0';
-        pop_from_queue <= '0'; 
-        alu_temp_reg1_en <= '0'; 
+        pop_from_queue <= '0';
+        alu_temp_reg1_en <= '0';
         alu_temp_reg2_en <= '0';
         alu_op_sel <= "0000";
         ALU_tri_en <= '0';
-        ax_en<= '0'; ax_en_l<= '0'; ax_en_h<= '0'; ax_tri_en <= '0';
-        bx_en<= '0'; bx_en_l<= '0'; bx_en_h<= '0'; bx_tri_en <= '0';
-        cx_en<= '0'; cx_en_l<= '0'; cx_en_h<= '0'; cx_tri_en <= '0';
-        dx_en<= '0'; dx_en_l<= '0'; dx_en_h<= '0'; dx_tri_en <= '0';
-        sp_en<= '0'; sp_tri_en <= '0';
-        bp_en<= '0'; bp_tri_en <= '0';
-        si_en<= '0'; si_tri_en <= '0';
-        di_en<= '0'; di_tri_en <= '0';
+        ax_en <= '0';
+        ax_en_l <= '0';
+        ax_en_h <= '0';
+        ax_tri_en <= '0';
+        bx_en <= '0';
+        bx_en_l <= '0';
+        bx_en_h <= '0';
+        bx_tri_en <= '0';
+        cx_en <= '0';
+        cx_en_l <= '0';
+        cx_en_h <= '0';
+        cx_tri_en <= '0';
+        dx_en <= '0';
+        dx_en_l <= '0';
+        dx_en_h <= '0';
+        dx_tri_en <= '0';
+        sp_en <= '0';
+        sp_tri_en <= '0';
+        bp_en <= '0';
+        bp_tri_en <= '0';
+        si_en <= '0';
+        si_tri_en <= '0';
+        di_en <= '0';
+        di_tri_en <= '0';
         mem_write_en <= '0';
         disable_inst_fetch <= '0';
-        number_of_pop <= 1; 
-        adr_gen_mux2_sel<= "00";
+        number_of_pop <= 1;
+        adr_gen_mux2_sel <= "00";
+        memory_bus_tri <= '0';
 
         CASE pstate IS
 
@@ -116,8 +134,9 @@ BEGIN
                 di_tri_en <= '0';
                 mem_write_en <= '0';
                 disable_inst_fetch <= '0';
-                number_of_pop <= 1; 
-                adr_gen_mux2_sel<= "00";
+                number_of_pop <= 1;
+                adr_gen_mux2_sel <= "00";
+                memory_bus_tri <= '0';
 
             WHEN fetch =>
 
@@ -131,7 +150,7 @@ BEGIN
                 IF (inst_reg_out(7 DOWNTO 3) = move_mem_reg_opcd) THEN
                     IF (queue_out_to_ctrl(7 DOWNTO 6) = "11") THEN -- reg to reg
                         nstate <= move_reg_reg_state;
-                    ELSIF (queue_out_to_ctrl(7 DOWNTO 6) = "01" and inst_reg_out(1) = '1') THEN -- reg to mem
+                    ELSIF (queue_out_to_ctrl(7 DOWNTO 6) = "01" AND inst_reg_out(1) = '1') THEN -- reg to mem
                         nstate <= move_reg_mem_state;
                     ELSE -- mem to reg
                         nstate <= move_mem_reg_state;
@@ -143,66 +162,81 @@ BEGIN
             WHEN move_reg_reg_state =>
 
                 -- if(inst_reg_out(0) = '1')then
-                IF queue_out_to_ctrl(7 DOWNTO 6) = "11" THEN
-                    IF (queue_out_to_ctrl(5 DOWNTO 3) = AX_reg_opcd AND queue_out_to_ctrl(2 DOWNTO 0) = BX_reg_opcd) THEN
-                        ax_tri_en <= '1';
-                        bx_en <= '1';
-                    ELSIF (queue_out_to_ctrl(5 DOWNTO 3) = AX_reg_opcd AND queue_out_to_ctrl(2 DOWNTO 0) = CX_reg_opcd) THEN
-                        ax_tri_en <= '1';
-                        cx_en <= '1';
-                    ELSIF (queue_out_to_ctrl(5 DOWNTO 3) = AX_reg_opcd AND queue_out_to_ctrl(2 DOWNTO 0) = DX_reg_opcd) THEN
-                        ax_tri_en <= '1';
-                        dx_en <= '1';
-                    ELSIF (queue_out_to_ctrl(5 DOWNTO 3) = BX_reg_opcd AND queue_out_to_ctrl(2 DOWNTO 0) = AX_reg_opcd) THEN
-                        bx_tri_en <= '1';
-                        ax_en <= '1';
-                    ELSIF (queue_out_to_ctrl(5 DOWNTO 3) = BX_reg_opcd AND queue_out_to_ctrl(2 DOWNTO 0) = CX_reg_opcd) THEN
-                        bx_tri_en <= '1';
-                        cx_en <= '1';
-                    ELSIF (queue_out_to_ctrl(5 DOWNTO 3) = BX_reg_opcd AND queue_out_to_ctrl(2 DOWNTO 0) = DX_reg_opcd) THEN
-                        bx_tri_en <= '1';
-                        dx_en <= '1';
-                    ELSIF (queue_out_to_ctrl(5 DOWNTO 3) = CX_reg_opcd AND queue_out_to_ctrl(2 DOWNTO 0) = AX_reg_opcd) THEN
-                        cx_tri_en <= '1';
-                        ax_en <= '1';
-                    ELSIF (queue_out_to_ctrl(5 DOWNTO 3) = CX_reg_opcd AND queue_out_to_ctrl(2 DOWNTO 0) = BX_reg_opcd) THEN
-                        cx_tri_en <= '1';
-                        bx_en <= '1';
-                    ELSIF (queue_out_to_ctrl(5 DOWNTO 3) = CX_reg_opcd AND queue_out_to_ctrl(2 DOWNTO 0) = DX_reg_opcd) THEN
-                        cx_tri_en <= '1';
-                        dx_en <= '1';
-                    ELSIF (queue_out_to_ctrl(5 DOWNTO 3) = DX_reg_opcd AND queue_out_to_ctrl(2 DOWNTO 0) = AX_reg_opcd) THEN
-                        dx_tri_en <= '1';
-                        ax_en <= '1';
-                    ELSIF (queue_out_to_ctrl(5 DOWNTO 3) = DX_reg_opcd AND queue_out_to_ctrl(2 DOWNTO 0) = BX_reg_opcd) THEN
-                        dx_tri_en <= '1';
-                        bx_en <= '1';
-                    ELSIF (queue_out_to_ctrl(5 DOWNTO 3) = DX_reg_opcd AND queue_out_to_ctrl(2 DOWNTO 0) = CX_reg_opcd) THEN
-                        dx_tri_en <= '1';
-                        cx_en <= '1';
-                    END IF;
+                IF (queue_out_to_ctrl(5 DOWNTO 3) = AX_reg_opcd AND queue_out_to_ctrl(2 DOWNTO 0) = BX_reg_opcd) THEN
+                    ax_tri_en <= '1';
+                    bx_en <= '1';
+                ELSIF (queue_out_to_ctrl(5 DOWNTO 3) = AX_reg_opcd AND queue_out_to_ctrl(2 DOWNTO 0) = CX_reg_opcd) THEN
+                    ax_tri_en <= '1';
+                    cx_en <= '1';
+                ELSIF (queue_out_to_ctrl(5 DOWNTO 3) = AX_reg_opcd AND queue_out_to_ctrl(2 DOWNTO 0) = DX_reg_opcd) THEN
+                    ax_tri_en <= '1';
+                    dx_en <= '1';
+                ELSIF (queue_out_to_ctrl(5 DOWNTO 3) = BX_reg_opcd AND queue_out_to_ctrl(2 DOWNTO 0) = AX_reg_opcd) THEN
+                    bx_tri_en <= '1';
+                    ax_en <= '1';
+                ELSIF (queue_out_to_ctrl(5 DOWNTO 3) = BX_reg_opcd AND queue_out_to_ctrl(2 DOWNTO 0) = CX_reg_opcd) THEN
+                    bx_tri_en <= '1';
+                    cx_en <= '1';
+                ELSIF (queue_out_to_ctrl(5 DOWNTO 3) = BX_reg_opcd AND queue_out_to_ctrl(2 DOWNTO 0) = DX_reg_opcd) THEN
+                    bx_tri_en <= '1';
+                    dx_en <= '1';
+                ELSIF (queue_out_to_ctrl(5 DOWNTO 3) = CX_reg_opcd AND queue_out_to_ctrl(2 DOWNTO 0) = AX_reg_opcd) THEN
+                    cx_tri_en <= '1';
+                    ax_en <= '1';
+                ELSIF (queue_out_to_ctrl(5 DOWNTO 3) = CX_reg_opcd AND queue_out_to_ctrl(2 DOWNTO 0) = BX_reg_opcd) THEN
+                    cx_tri_en <= '1';
+                    bx_en <= '1';
+                ELSIF (queue_out_to_ctrl(5 DOWNTO 3) = CX_reg_opcd AND queue_out_to_ctrl(2 DOWNTO 0) = DX_reg_opcd) THEN
+                    cx_tri_en <= '1';
+                    dx_en <= '1';
+                ELSIF (queue_out_to_ctrl(5 DOWNTO 3) = DX_reg_opcd AND queue_out_to_ctrl(2 DOWNTO 0) = AX_reg_opcd) THEN
+                    dx_tri_en <= '1';
+                    ax_en <= '1';
+                ELSIF (queue_out_to_ctrl(5 DOWNTO 3) = DX_reg_opcd AND queue_out_to_ctrl(2 DOWNTO 0) = BX_reg_opcd) THEN
+                    dx_tri_en <= '1';
+                    bx_en <= '1';
+                ELSIF (queue_out_to_ctrl(5 DOWNTO 3) = DX_reg_opcd AND queue_out_to_ctrl(2 DOWNTO 0) = CX_reg_opcd) THEN
+                    dx_tri_en <= '1';
+                    cx_en <= '1';
                 END IF;
 
                 pop_from_queue <= '1';
                 nstate <= fetch;
-            
+
             WHEN move_reg_mem_state =>
-                
-                if (queue_out_to_ctrl(5 DOWNTO 3) = AX_reg_opcd) then
+
+                IF (queue_out_to_ctrl(5 DOWNTO 3) = AX_reg_opcd) THEN
                     ax_tri_en <= '1';
-                elsif (queue_out_to_ctrl(5 DOWNTO 3) = BX_reg_opcd) then
+                ELSIF (queue_out_to_ctrl(5 DOWNTO 3) = BX_reg_opcd) THEN
                     bx_tri_en <= '1';
-                elsif (queue_out_to_ctrl(5 DOWNTO 3) = CX_reg_opcd) then
+                ELSIF (queue_out_to_ctrl(5 DOWNTO 3) = CX_reg_opcd) THEN
                     cx_tri_en <= '1';
-                elsif (queue_out_to_ctrl(5 DOWNTO 3) = DX_reg_opcd) then
+                ELSIF (queue_out_to_ctrl(5 DOWNTO 3) = DX_reg_opcd) THEN
                     dx_tri_en <= '1';
-                end if;
-                    
-                -- pop_from_queue <= '1';
+                END IF;
+
+                pop_from_queue <= '1';
                 mem_write_en <= '1';
+                adr_gen_mux2_sel <= "01";
+                adr_gen_mux1_sel <= "11";
                 nstate <= fetch;
 
             WHEN move_mem_reg_state =>
+
+                IF (queue_out_to_ctrl(5 DOWNTO 3) = AX_reg_opcd) THEN
+                    ax_en <= '1';
+                ELSIF (queue_out_to_ctrl(5 DOWNTO 3) = BX_reg_opcd) THEN
+                    bx_en <= '1';
+                ELSIF (queue_out_to_ctrl(5 DOWNTO 3) = CX_reg_opcd) THEN
+                    cx_en <= '1';
+                ELSIF (queue_out_to_ctrl(5 DOWNTO 3) = DX_reg_opcd) THEN
+                    dx_en <= '1';
+                END IF;
+
+                memory_bus_tri <= '1';
+                pop_from_queue <= '1';
+                adr_gen_mux2_sel <= "01";
+                adr_gen_mux1_sel <= "11";
                 pop_from_queue <= '1';
                 nstate <= fetch;
 

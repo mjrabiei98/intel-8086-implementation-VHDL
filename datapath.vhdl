@@ -27,7 +27,8 @@ entity datapath is
          data_out: out std_logic_vector(15 downto 0);
          disable_inst_fetch : in std_logic;
          number_of_pop : in integer;
-         adr_gen_mux2_sel : in std_logic_vector(1 downto 0));
+         adr_gen_mux2_sel : in std_logic_vector(1 downto 0);
+         memory_bus_tri: in std_logic);
 
 end entity datapath;
 
@@ -85,11 +86,11 @@ begin
 
     adr_gen_mux1: entity work.mux(behavioral)
         generic map(16)
-        port map(ES_out, CS_out, SS_out, DS_out, adr_gen_mux1_sel, adr_gen_mux1_out);
+        port map(CS_out, ES_out, SS_out, DS_out, adr_gen_mux1_sel, adr_gen_mux1_out);
 
-    dr_gen_mux1: entity work.mux(behavioral)
+    adr_gen_mux2: entity work.mux(behavioral)
         generic map(16)
-        port map(IP_out, data_bus_16, SS_out, DS_out, adr_gen_mux2_sel, adr_gen_mux2_out);
+        port map(IP_out, di_out, Si_out, DS_out, adr_gen_mux2_sel, adr_gen_mux2_out);
 
 
     address_generator: entity work.address_calculator(behavioral)
@@ -193,6 +194,9 @@ begin
 
     DI_tri: entity work.TriStateBuffer(behavioral)
         port map(di_out, di_tri_en, data_bus_16);
+
+    memory_to_bus_tri : entity work.TriStateBuffer(behavioral)
+        port map(mem_data_in, memory_bus_tri, data_bus_16);
 
     data_out <= data_bus_16;
      
