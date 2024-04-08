@@ -46,7 +46,9 @@ ENTITY controller IS
         memory_bus_tri : OUT STD_LOGIC;
         queue_empty : IN STD_LOGIC;
         queue_to_bus_tri : OUT STD_LOGIC;
-        ip_mux_sel : OUT STD_LOGIC_VECTOR(1 DOWNTO 0));
+        ip_mux_sel : OUT STD_LOGIC_VECTOR(1 DOWNTO 0);
+        flag_reg_out : IN STD_LOGIC_VECTOR(7 DOWNTO 0);
+        flag_reg_en : OUT STD_LOGIC);
 
 END ENTITY controller;
 
@@ -110,6 +112,7 @@ BEGIN
         adr_gen_mux2_sel <= "00";
         memory_bus_tri <= '0';
         ip_mux_sel <= "00";
+        flag_reg_en <= '0';
 
         CASE pstate IS
 

@@ -209,7 +209,7 @@ ENTITY alu IS
         a, b : IN STD_LOGIC_VECTOR(input_size - 1 DOWNTO 0);
         op_sel : IN STD_LOGIC_VECTOR(3 DOWNTO 0);
         data_out : OUT STD_LOGIC_VECTOR(input_size - 1 DOWNTO 0);
-        carry_out, zero : OUT STD_LOGIC);
+        alu_flag_out : OUT STD_LOGIC_VECTOR(7 DOWNTO 0));
 END ENTITY alu;
 
 ARCHITECTURE Behavioral OF alu IS
@@ -217,15 +217,16 @@ BEGIN
     PROCESS (op_sel, a, b)
         VARIABLE sum_extended : STD_LOGIC_VECTOR(16 DOWNTO 0);
     BEGIN
+        alu_flag_out <= (others => '0');
         CASE op_sel IS
             WHEN "0000" => -- Addition
                 sum_extended := STD_LOGIC_VECTOR(unsigned('0' & a) + unsigned('0' & b));
                 data_out <= STD_LOGIC_VECTOR(signed(a) + signed(b));
-                carry_out <= sum_extended(15);
+                alu_flag_out(1) <= sum_extended(15);
                 IF sum_extended = "0000000000000000" THEN
-                    zero <= '1';
+                    alu_flag_out(0) <= '1';
                 ELSE
-                    zero <= '0';
+                    alu_flag_out(0) <= '0';
                 END IF;
             WHEN "0001" => -- Subtraction
                 sum_extended := STD_LOGIC_VECTOR(signed(a) - signed(b));

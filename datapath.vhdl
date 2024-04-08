@@ -31,7 +31,9 @@ ENTITY datapath IS
         memory_bus_tri : IN STD_LOGIC;
         queue_empty : OUT STD_LOGIC;
         queue_to_bus_tri : IN STD_LOGIC;
-        ip_mux_sel : in std_logic_vector(1 downto 0));
+        ip_mux_sel : IN STD_LOGIC_VECTOR(1 DOWNTO 0);
+        flag_reg_out : OUT STD_LOGIC_VECTOR(7 DOWNTO 0);
+        flag_reg_en : IN STD_LOGIC);
 
 END ENTITY datapath;
 
@@ -59,6 +61,7 @@ ARCHITECTURE behavioral OF datapath IS
     SIGNAL alu_carry_out : STD_LOGIC;
     SIGNAL alu_zero : STD_LOGIC;
     SIGNAL ax_out, bx_out, cx_out, dx_out, sp_out, bp_out, si_out, di_out : STD_LOGIC_VECTOR(15 DOWNTO 0);
+    SIGNAL alu_flag_out : STD_LOGIC_VECTOR(7 DOWNTO 0);
 BEGIN
 
     ES : ENTITY work.reg(behavioral)
@@ -77,11 +80,11 @@ BEGIN
     IP : ENTITY work.reg(behavioral)
         GENERIC MAP(16)
         PORT MAP(clk, rst, IP_en, inc_out, IP_out);
-    
-    ip_queue_temp <= "00000000" & queue_out(7 downto 0);
 
-    IP_MUX : entity work.mux(behavioral)
-        port map(inc_out,ip_queue_temp, di_out,si_out, ip_mux_sel, ip_mux_out);
+    ip_queue_temp <= "00000000" & queue_out(7 DOWNTO 0);
+
+    IP_MUX : ENTITY work.mux(behavioral)
+        PORT MAP(inc_out, ip_queue_temp, di_out, si_out, ip_mux_sel, ip_mux_out);
 
     INC : ENTITY work.incrementor(behavioral)
         GENERIC MAP(16)
@@ -117,7 +120,11 @@ BEGIN
         PORT MAP(clk, rst, alu_temp_reg2_en, data_bus_16, alu_temp_reg2_out);
 
     Arith_logic_unit : ENTITY work.alu(behavioral)
-        PORT MAP(alu_temp_reg1_out, alu_temp_reg2_out, alu_op_sel, alu_out, alu_carry_out, alu_zero);
+        PORT MAP(alu_temp_reg1_out, alu_temp_reg2_out, alu_op_sel, alu_out, alu_flag_out);
+
+    flag_reg : ENTITY work.reg(behavioral)
+        GENERIC MAP(8)
+        PORT MAP(clk, rst, flag_reg_en, alu_flag_out, flag_reg_out);
 
     ALU_tri : ENTITY work.TriStateBuffer(behavioral)
         PORT MAP(alu_out, ALU_tri_en, data_bus_16);
@@ -177,7 +184,7 @@ BEGIN
         PORT MAP(mem_data_in, memory_bus_tri, data_bus_16);
 
     queue_to_bus_tristate : ENTITY work.TriStateBuffer(behavioral)
-        PORT MAP(queue_out(15 downto 0), queue_to_bus_tri, data_bus_16);
+        PORT MAP(queue_out(15 DOWNTO 0), queue_to_bus_tri, data_bus_16);
 
     data_out <= data_bus_16;
 END behavioral; -- bwhavioralsab
