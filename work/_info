@@ -4,7 +4,7 @@ K3
 cModel Technology
 dC:\Users\mohammad javad\Desktop\uni\arshad tehran university\term 2\VHDL\first try to learn vhdl
 Eaddress_calculator
-Z0 w1712518509
+Z0 w1712549654
 Z1 DPx4 ieee 11 numeric_std 0 22 O3PF8EB`?j9=z7KT`fn941
 Z2 DPx3 std 6 textio 0 22 5>J:;AW>W0[[dW0I6EN1Q0
 Z3 DPx4 ieee 14 std_logic_1164 0 22 5=aWaoGZSMWIcH0i^f`XF1
@@ -16,7 +16,7 @@ L160
 Vg3mY?9g0Ud:LYP]dz]R6n2
 Z7 OV;C;10.1d;51
 32
-Z8 !s108 1712521774.195000
+Z8 !s108 1712549663.779000
 Z9 !s90 -reportprogress|300|-work|work|-2002|-explicit|C:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW/HW1/code/elements.vhdl|
 Z10 !s107 C:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW/HW1/code/elements.vhdl|
 Z11 o-work work -2002 -explicit -O0
@@ -41,7 +41,7 @@ R12
 !s100 O_VeSfRQd]cAn<GizDjgd0
 !i10b 1
 Ealu
-Z14 w1712518509
+Z14 w1712549654
 R1
 R2
 R3
@@ -67,7 +67,7 @@ R3
 Z15 DEx4 work 3 alu 0 22 Cl]kN5kOa`;3idYQKP?411
 l216
 L215
-VCmQ4j5?f`8jSnb`]kYSj=2
+V9zn@e9U;e2ZJ0NnkkD6;I2
 R7
 32
 R8
@@ -75,10 +75,10 @@ R9
 R10
 R11
 R12
-!s100 gZ@FTc^6BdZkDUSzifhm72
+!s100 URejiEkcEg5@[PKH[^g=@2
 !i10b 1
 Econtroller
-Z16 w1712521768
+Z16 w1712549658
 R1
 Z17 DPx4 ieee 18 std_logic_unsigned 0 22 RYmj;=TK`k=k>D@Cz`zoB3
 Z18 DPx4 ieee 15 std_logic_arith 0 22 4`Y?g_lkdn;7UL9IiJck01
@@ -92,7 +92,7 @@ L6
 VjzQ0IbI;_QEDHJRPmcLfC3
 R7
 32
-Z21 !s108 1712521774.482000
+Z21 !s108 1712549663.999000
 Z22 !s90 -reportprogress|300|-work|work|-2002|-explicit|C:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW/HW1/code/controller.vhdl|
 Z23 !s107 C:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW/HW1/code/controller.vhdl|
 R11
@@ -108,7 +108,8 @@ R3
 Z24 DEx4 work 10 controller 0 22 jzQ0IbI;_QEDHJRPmcLfC3
 l55
 L48
-VZj3Ozn[GaKOMPL1KXNJ;:0
+VNVihL=F4Q5jjL<cNAlleU0
+!s100 EglVSO97`eXin[Bf]Y@;83
 R7
 32
 R21
@@ -116,7 +117,6 @@ R22
 R23
 R11
 R12
-!s100 m4]KgQ_UW<DVX_JQlM4k@3
 !i10b 1
 Edatapath
 Z25 w1712518368
@@ -133,7 +133,7 @@ L6
 V3_d6WH`l?YTm0;o5>lN;h3
 R7
 32
-Z28 !s108 1712521774.419000
+Z28 !s108 1712549663.958000
 Z29 !s90 -reportprogress|300|-work|work|-2002|-explicit|C:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW/HW1/code/datapath.vhdl|
 Z30 !s107 C:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW/HW1/code/datapath.vhdl|
 R11
@@ -145,7 +145,7 @@ Z31 DEx4 work 11 x_registers 0 22 VdSU:PD_:O:>mo:=eFL<b0
 Z32 DEx4 work 14 tristatebuffer 0 22 3]aVFGH_J=RZPfgI^DJNz0
 R15
 Z33 DPx4 ieee 16 std_logic_textio 0 22 ?Il0a149GV276[?[UMDWh2
-Z34 DEx4 work 5 queue 0 22 Ef]?>9;3NBh6K922SSkUl3
+Z34 DEx4 work 5 queue 0 22 G;<:3l4ZMi_kHDI;fCHSX3
 R13
 Z35 DEx4 work 3 mux 0 22 CeSYkNYhD^CF=:eZdMXa[3
 Z36 DEx4 work 11 incrementor 0 22 9am>6MKXUH@HkFaEmIl5?3
@@ -287,7 +287,7 @@ L11
 VB]I`2[nz7ZYSj3IScjo0?3
 R7
 32
-Z45 !s108 1712521774.371000
+Z45 !s108 1712549663.918000
 Z46 !s90 -reportprogress|300|-work|work|-2002|-explicit|C:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW/HW1/code/memory.vhdl|
 Z47 !s107 C:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW/HW1/code/memory.vhdl|
 R11
@@ -399,7 +399,7 @@ VZ]eTz1]^U=8Qkbz5zV9L<1
 R7
 32
 !i10b 1
-Z54 !s108 1712521774.535000
+Z54 !s108 1712549664.046000
 Z55 !s90 -reportprogress|300|-work|work|-2002|-explicit|C:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW/HW1/code/8086_processor.vhdl|
 Z56 !s107 C:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW/HW1/code/8086_processor.vhdl|
 R11
@@ -436,7 +436,7 @@ R5
 R6
 l0
 L32
-VEf]?>9;3NBh6K922SSkUl3
+VG;<:3l4ZMi_kHDI;fCHSX3
 R7
 32
 R8
@@ -444,7 +444,7 @@ R9
 R10
 R11
 R12
-!s100 6Yo=bg]n2NJYMl0>b4_MX2
+!s100 Y0ZYk?Zan;XjaU42a7`Z]1
 !i10b 1
 Abehavioral
 R18
@@ -599,7 +599,7 @@ L4
 VB6JRKX>U3F7^SJc39KAPS0
 R7
 32
-Z68 !s108 1712521774.323000
+Z68 !s108 1712549663.877000
 R64
 R65
 R11
@@ -639,7 +639,7 @@ R4
 R5
 R6
 l0
-L251
+L253
 V3]aVFGH_J=RZPfgI^DJNz0
 R7
 32
@@ -648,7 +648,7 @@ R9
 R10
 R11
 R12
-!s100 C92m=LYa>;@mLZ[4X1`ZC0
+!s100 mH>:?XN4cQ9Qe]=F6>RT_1
 !i10b 1
 Abehavioral
 R17
@@ -656,8 +656,8 @@ R18
 R2
 R3
 R32
-l261
-L260
+l263
+L262
 VUPI?`U?US_U<nJ4CzLRdG2
 R7
 32
@@ -666,7 +666,7 @@ R9
 R10
 R11
 R12
-!s100 8kLRkKkgn_[Igb[oJWHCX1
+!s100 O<H8XbQCcROU=F@PD3Nkb1
 !i10b 1
 Ex_registers
 R14

@@ -291,19 +291,43 @@ BEGIN
                 nstate <= fetch;
 
             WHEN mul_reg_reg_state1 =>
-                nstate <= mul_reg_reg_state2;
-                -- load first reg to temp 1
-            WHEN mul_reg_reg_state2 =>
-                nstate <= mul_reg_reg_state3;
-                -- load second register to temp2
-            WHEN mul_reg_reg_state3 =>
-                nstate <= fetch;
-                -- calculate the alu
-                -- load low part to ax
 
-            -- load second part to cx
-            -- load flags
-            -- pop
+                nstate <= mul_reg_reg_state2;
+                alu_temp_reg1_en <= '1';
+                ax_tri_en <= '1';
+
+            WHEN mul_reg_reg_state2 =>
+
+                nstate <= mul_reg_reg_state3;
+                alu_temp_reg2_en <= '1';
+                IF (queue_out_to_ctrl(2 DOWNTO 0) = AX_reg_opcd) THEN
+                    ax_tri_en <= '1';
+                ELSIF (queue_out_to_ctrl(2 DOWNTO 0) = BX_reg_opcd) THEN
+                    bx_tri_en <= '1';
+                ELSIF (queue_out_to_ctrl(2 DOWNTO 0) = CX_reg_opcd) THEN
+                    cx_tri_en <= '1';
+                ELSIF (queue_out_to_ctrl(2 DOWNTO 0) = DX_reg_opcd) THEN
+                    dx_tri_en <= '1';
+                END IF;
+
+            WHEN mul_reg_reg_state3 =>
+
+                nstate <= fetch;
+                alu_op_sel <= "0101";
+                ALU_tri_en <= '1';
+                ax_en <= '1';
+                pop_from_queue <= '1';
+                number_of_pop <= 2;
+                nstate <= fetch;
+
+                -- load second part to cx
+                -- load flags
+
+                -- inc
+
+                -- DEC
+
+                -- loop
 
         END CASE;
     END PROCESS;

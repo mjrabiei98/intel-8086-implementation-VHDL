@@ -36,7 +36,7 @@ ENTITY queue IS
         full : OUT STD_LOGIC;
         empty : OUT STD_LOGIC;
         data_out : OUT STD_LOGIC_VECTOR(47 DOWNTO 0);
-        number_of_pop : in integer);
+        number_of_pop : IN INTEGER);
 END ENTITY queue;
 
 ARCHITECTURE behavioral OF queue IS
@@ -237,6 +237,8 @@ BEGIN
                 data_out <= a OR b;
             WHEN "0100" => -- XOR
                 data_out <= a XOR b;
+            WHEN "0101" => -- mult
+                data_out <= std_logic_vector(unsigned(a) * unsigned(b));
             WHEN OTHERS => -- Default or undefined operation
                 data_out <= (OTHERS => 'X');
         END CASE;
