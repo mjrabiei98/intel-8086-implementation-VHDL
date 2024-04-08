@@ -10,12 +10,16 @@ ENTITY controller IS
         CX_reg_opcd : STD_LOGIC_VECTOR(2 DOWNTO 0) := "001";
         DX_reg_opcd : STD_LOGIC_VECTOR(2 DOWNTO 0) := "010";
         BX_reg_opcd : STD_LOGIC_VECTOR(2 DOWNTO 0) := "011";
+        SP_reg_opcd : STD_LOGIC_VECTOR(2 DOWNTO 0) := "100";
+        BP_reg_opcd : STD_LOGIC_VECTOR(2 DOWNTO 0) := "101";
+        SI_reg_opcd : STD_LOGIC_VECTOR(2 DOWNTO 0) := "110";
+        DI_reg_opcd : STD_LOGIC_VECTOR(2 DOWNTO 0) := "111";
         move_mem_reg_opcd : STD_LOGIC_VECTOR(4 DOWNTO 0) := "10010";
         move_imd_opcd : STD_LOGIC_VECTOR(3 DOWNTO 0) := "1011";
         inc_reg_opcd : STD_LOGIC_VECTOR(4 DOWNTO 0) := "01000";
-        dec_reg_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "1111111";
+        dec_reg_opcd : STD_LOGIC_VECTOR(4 DOWNTO 0) := "01001";
         mul_reg_reg_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "1111011";
-        loop_opcd : STD_LOGIC_VECTOR(7 DOWNTO 0) := "11100010");
+        loop_disp_opcd : STD_LOGIC_VECTOR(7 DOWNTO 0) := "11100010");
 
     PORT (
         clk, rst : IN STD_LOGIC;
@@ -49,7 +53,8 @@ ARCHITECTURE behavioral OF controller IS
 
     TYPE state IS (idle, fetch, pop_state, move_reg_reg_state, move_reg_mem_state,
         move_mem_reg_state, mevoe_immediate1, mevoe_immediate2, mul_reg_reg_state1,
-        mul_reg_reg_state2, mul_reg_reg_state3);
+        mul_reg_reg_state2, mul_reg_reg_state3, inc_state1, inc_state2, dec_state1, dec_state2,
+        loop_disp_state);
     SIGNAL pstate, nstate : state := idle;
 
 BEGIN
@@ -109,43 +114,6 @@ BEGIN
             WHEN idle =>
 
                 nstate <= fetch;
-                ES_tri <= '0';
-                adr_gen_mux1_sel <= "00";
-                inst_reg_en <= '0';
-                pop_from_queue <= '0';
-                alu_temp_reg1_en <= '0';
-                alu_temp_reg2_en <= '0';
-                alu_op_sel <= "0000";
-                ALU_tri_en <= '0';
-                ax_en <= '0';
-                ax_en_l <= '0';
-                ax_en_h <= '0';
-                ax_tri_en <= '0';
-                bx_en <= '0';
-                bx_en_l <= '0';
-                bx_en_h <= '0';
-                bx_tri_en <= '0';
-                cx_en <= '0';
-                cx_en_l <= '0';
-                cx_en_h <= '0';
-                cx_tri_en <= '0';
-                dx_en <= '0';
-                dx_en_l <= '0';
-                dx_en_h <= '0';
-                dx_tri_en <= '0';
-                sp_en <= '0';
-                sp_tri_en <= '0';
-                bp_en <= '0';
-                bp_tri_en <= '0';
-                si_en <= '0';
-                si_tri_en <= '0';
-                di_en <= '0';
-                di_tri_en <= '0';
-                mem_write_en <= '0';
-                disable_inst_fetch <= '0';
-                number_of_pop <= 1;
-                adr_gen_mux2_sel <= "00";
-                memory_bus_tri <= '0';
 
             WHEN fetch =>
 
@@ -172,6 +140,15 @@ BEGIN
 
                 ELSIF (inst_reg_out(7 DOWNTO 1) = mul_reg_reg_opcd) THEN
                     nstate <= mul_reg_reg_state1;
+
+                ELSIF (inst_reg_out(7 DOWNTO 3) = inc_reg_opcd) THEN
+                    nstate <= inc_state1;
+
+                ELSIF (inst_reg_out(7 DOWNTO 3) = dec_reg_opcd) THEN
+                    nstate <= dec_state1;
+
+                ELSIF (inst_reg_out(7 DOWNTO 0) = loop_disp_opcd) THEN
+                    nstate <= loop_disp_state;
 
                 ELSE
                     nstate <= fetch;
@@ -323,11 +300,95 @@ BEGIN
                 -- load second part to cx
                 -- load flags
 
-                -- inc
+            WHEN inc_state1 =>
+                IF (inst_reg_out(2 DOWNTO 0) = AX_reg_opcd) THEN
+                    ax_tri_en <= '1';
+                ELSIF (inst_reg_out(2 DOWNTO 0) = BX_reg_opcd) THEN
+                    bx_tri_en <= '1';
+                ELSIF (inst_reg_out(2 DOWNTO 0) = CX_reg_opcd) THEN
+                    cx_tri_en <= '1';
+                ELSIF (inst_reg_out(2 DOWNTO 0) = DX_reg_opcd) THEN
+                    dx_tri_en <= '1';
+                ELSIF (inst_reg_out(2 DOWNTO 0) = SP_reg_opcd) THEN
+                    sp_tri_en <= '1';
+                ELSIF (inst_reg_out(2 DOWNTO 0) = BP_reg_opcd) THEN
+                    bp_tri_en <= '1';
+                ELSIF (inst_reg_out(2 DOWNTO 0) = SI_reg_opcd) THEN
+                    si_tri_en <= '1';
+                ELSIF (inst_reg_out(2 DOWNTO 0) = DI_reg_opcd) THEN
+                    di_tri_en <= '1';
+                END IF;
+                alu_temp_reg1_en <= '1';
+                nstate <= inc_state2;
 
-                -- DEC
+            WHEN inc_state2 =>
+                IF (inst_reg_out(2 DOWNTO 0) = AX_reg_opcd) THEN
+                    ax_en <= '1';
+                ELSIF (inst_reg_out(2 DOWNTO 0) = BX_reg_opcd) THEN
+                    bx_en <= '1';
+                ELSIF (inst_reg_out(2 DOWNTO 0) = CX_reg_opcd) THEN
+                    cx_en <= '1';
+                ELSIF (inst_reg_out(2 DOWNTO 0) = DX_reg_opcd) THEN
+                    dx_en <= '1';
+                ELSIF (inst_reg_out(2 DOWNTO 0) = SP_reg_opcd) THEN
+                    sp_en <= '1';
+                ELSIF (inst_reg_out(2 DOWNTO 0) = BP_reg_opcd) THEN
+                    bp_en <= '1';
+                ELSIF (inst_reg_out(2 DOWNTO 0) = SI_reg_opcd) THEN
+                    si_en <= '1';
+                ELSIF (inst_reg_out(2 DOWNTO 0) = DI_reg_opcd) THEN
+                    di_en <= '1';
+                END IF;
+                ALU_tri_en <= '1';
+                alu_op_sel <= "0110";
+                nstate <= fetch;
 
-                -- loop
+            WHEN dec_state1 =>
+
+                IF (inst_reg_out(2 DOWNTO 0) = AX_reg_opcd) THEN
+                    ax_tri_en <= '1';
+                ELSIF (inst_reg_out(2 DOWNTO 0) = BX_reg_opcd) THEN
+                    bx_tri_en <= '1';
+                ELSIF (inst_reg_out(2 DOWNTO 0) = CX_reg_opcd) THEN
+                    cx_tri_en <= '1';
+                ELSIF (inst_reg_out(2 DOWNTO 0) = DX_reg_opcd) THEN
+                    dx_tri_en <= '1';
+                ELSIF (inst_reg_out(2 DOWNTO 0) = SP_reg_opcd) THEN
+                    sp_tri_en <= '1';
+                ELSIF (inst_reg_out(2 DOWNTO 0) = BP_reg_opcd) THEN
+                    bp_tri_en <= '1';
+                ELSIF (inst_reg_out(2 DOWNTO 0) = SI_reg_opcd) THEN
+                    si_tri_en <= '1';
+                ELSIF (inst_reg_out(2 DOWNTO 0) = DI_reg_opcd) THEN
+                    di_tri_en <= '1';
+                END IF;
+                alu_temp_reg1_en <= '1';
+                nstate <= dec_state2;
+
+            WHEN dec_state2 =>
+                IF (inst_reg_out(2 DOWNTO 0) = AX_reg_opcd) THEN
+                    ax_en <= '1';
+                ELSIF (inst_reg_out(2 DOWNTO 0) = BX_reg_opcd) THEN
+                    bx_en <= '1';
+                ELSIF (inst_reg_out(2 DOWNTO 0) = CX_reg_opcd) THEN
+                    cx_en <= '1';
+                ELSIF (inst_reg_out(2 DOWNTO 0) = DX_reg_opcd) THEN
+                    dx_en <= '1';
+                ELSIF (inst_reg_out(2 DOWNTO 0) = SP_reg_opcd) THEN
+                    sp_en <= '1';
+                ELSIF (inst_reg_out(2 DOWNTO 0) = BP_reg_opcd) THEN
+                    bp_en <= '1';
+                ELSIF (inst_reg_out(2 DOWNTO 0) = SI_reg_opcd) THEN
+                    si_en <= '1';
+                ELSIF (inst_reg_out(2 DOWNTO 0) = DI_reg_opcd) THEN
+                    di_en <= '1';
+                END IF;
+                ALU_tri_en <= '1';
+                alu_op_sel <= "0111";
+                nstate <= fetch;
+
+            WHEN loop_disp_state =>
+                nstate <= fetch;
 
         END CASE;
     END PROCESS;

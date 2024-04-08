@@ -238,7 +238,11 @@ BEGIN
             WHEN "0100" => -- XOR
                 data_out <= a XOR b;
             WHEN "0101" => -- mult
-                data_out <= std_logic_vector(unsigned(a) * unsigned(b));
+                data_out <= STD_LOGIC_VECTOR(unsigned(a) * unsigned(b));
+            WHEN "0110" => -- inc
+                data_out <= STD_LOGIC_VECTOR(signed(a) + 1);
+            WHEN "0111" => -- dec
+                data_out <= STD_LOGIC_VECTOR(signed(a) - 1);
             WHEN OTHERS => -- Default or undefined operation
                 data_out <= (OTHERS => 'X');
         END CASE;
