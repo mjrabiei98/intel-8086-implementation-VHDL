@@ -19,7 +19,8 @@ ENTITY controller IS
         inc_reg_opcd : STD_LOGIC_VECTOR(4 DOWNTO 0) := "01000";
         dec_reg_opcd : STD_LOGIC_VECTOR(4 DOWNTO 0) := "01001";
         mul_reg_reg_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "1111011";
-        loop_disp_opcd : STD_LOGIC_VECTOR(7 DOWNTO 0) := "11100010");
+        loop_disp_opcd : STD_LOGIC_VECTOR(7 DOWNTO 0) := "11100010";
+        loopz_disp_opcd : STD_LOGIC_VECTOR(7 DOWNTO 0) := "11100001");
 
     PORT (
         clk, rst : IN STD_LOGIC;
@@ -57,7 +58,7 @@ ARCHITECTURE behavioral OF controller IS
     TYPE state IS (idle, fetch, pop_state, move_reg_reg_state, move_reg_mem_state,
         move_mem_reg_state, mevoe_immediate1, mevoe_immediate2, mul_reg_reg_state1,
         mul_reg_reg_state2, mul_reg_reg_state3, inc_state1, inc_state2, dec_state1, dec_state2,
-        loop_disp_state);
+        loopz_disp_state, loopz_2, loopz_3, loopz_4);
     SIGNAL pstate, nstate : state := idle;
 
 BEGIN
@@ -152,8 +153,8 @@ BEGIN
                 ELSIF (inst_reg_out(7 DOWNTO 3) = dec_reg_opcd) THEN
                     nstate <= dec_state1;
 
-                ELSIF (inst_reg_out(7 DOWNTO 0) = loop_disp_opcd) THEN
-                    nstate <= loop_disp_state;
+                ELSIF (inst_reg_out(7 DOWNTO 0) = loopz_disp_opcd) THEN
+                    nstate <= loopz_disp_state;
 
                 ELSE
                     nstate <= fetch;
@@ -301,10 +302,9 @@ BEGIN
                 pop_from_queue <= '1';
                 number_of_pop <= 2;
                 nstate <= fetch;
+                -- flag_reg_en <= '1';
 
                 -- load second part to cx
-                -- load flags
-
             WHEN inc_state1 =>
                 IF (inst_reg_out(2 DOWNTO 0) = AX_reg_opcd) THEN
                     ax_tri_en <= '1';
@@ -392,8 +392,31 @@ BEGIN
                 alu_op_sel <= "0111";
                 nstate <= fetch;
 
-            WHEN loop_disp_state =>
+            WHEN loopz_disp_state =>
+                nstate <= loopz_2;
+                alu_temp_reg1_en <= '1';
+                cx_tri_en <= '1';
+
+            WHEN loopz_2 =>
+                nstate <= loopz_3;
+                alu_op_sel <= "0111";
+                flag_reg_en <= '1';
+            WHEN loopz_3 =>
+
+                alu_tri_en <= '1';
+                cx_en <= '1';
+                IF flag_reg_out(0) = '1' THEN
+                    ip_mux_sel <= "01";
+                    nstate <= loopz_4;
+                ELSE
+                    nstate <= fetch;
+                END IF;
+
+            WHEN loopz_4 =>
                 nstate <= fetch;
+                disable_inst_fetch <= '1';
+                pop_from_queue <= '1';
+                number_of_pop <= 6;
 
         END CASE;
     END PROCESS;
