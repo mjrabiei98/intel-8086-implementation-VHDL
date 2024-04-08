@@ -37,6 +37,7 @@ architecture behavioral of processor is
     signal memory_bus_tri : std_logic;
     signal queue_empty : std_logic;
     signal queue_to_bus_tri : std_logic;
+    signal ip_mux_sel : std_logic_vector(1 downto 0);
 
 begin
 
@@ -59,7 +60,7 @@ begin
                  si_en, si_tri_en,
                  di_en, di_tri_en,
                  data_out, disable_inst_fetch, number_of_pop,adr_gen_mux2_sel,
-                 memory_bus_tri,queue_empty, queue_to_bus_tri); 
+                 memory_bus_tri,queue_empty, queue_to_bus_tri,ip_mux_sel); 
 
     Contrl: entity work.controller(behavioral)
         port map(clk, rst, ES_tri, adr_gen_mux1_sel, 
@@ -78,6 +79,6 @@ begin
                  si_en, si_tri_en,
                  di_en, di_tri_en,
                  mem_write_en, disable_inst_fetch, number_of_pop,adr_gen_mux2_sel,
-                 memory_bus_tri,queue_empty, queue_to_bus_tri);
+                 memory_bus_tri,queue_empty, queue_to_bus_tri,ip_mux_sel);
 
 end behavioral ; -- behavioral

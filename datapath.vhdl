@@ -30,7 +30,8 @@ ENTITY datapath IS
         adr_gen_mux2_sel : IN STD_LOGIC_VECTOR(1 DOWNTO 0);
         memory_bus_tri : IN STD_LOGIC;
         queue_empty : OUT STD_LOGIC;
-        queue_to_bus_tri : IN STD_LOGIC);
+        queue_to_bus_tri : IN STD_LOGIC;
+        ip_mux_sel : in std_logic_vector(1 downto 0));
 
 END ENTITY datapath;
 
@@ -53,6 +54,8 @@ ARCHITECTURE behavioral OF datapath IS
     SIGNAL alu_temp_reg1_out : STD_LOGIC_VECTOR(15 DOWNTO 0);
     SIGNAL alu_temp_reg2_out : STD_LOGIC_VECTOR(15 DOWNTO 0);
     SIGNAL alu_out : STD_LOGIC_VECTOR(15 DOWNTO 0);
+    SIGNAL ip_mux_out : STD_LOGIC_VECTOR(15 DOWNTO 0);
+    SIGNAL ip_queue_temp : STD_LOGIC_VECTOR(15 DOWNTO 0);
     SIGNAL alu_carry_out : STD_LOGIC;
     SIGNAL alu_zero : STD_LOGIC;
     SIGNAL ax_out, bx_out, cx_out, dx_out, sp_out, bp_out, si_out, di_out : STD_LOGIC_VECTOR(15 DOWNTO 0);
@@ -74,6 +77,11 @@ BEGIN
     IP : ENTITY work.reg(behavioral)
         GENERIC MAP(16)
         PORT MAP(clk, rst, IP_en, inc_out, IP_out);
+    
+    ip_queue_temp <= "00000000" & queue_out(7 downto 0);
+
+    IP_MUX : entity work.mux(behavioral)
+        port map(inc_out,ip_queue_temp, di_out,si_out, ip_mux_sel, ip_mux_out);
 
     INC : ENTITY work.incrementor(behavioral)
         GENERIC MAP(16)

@@ -1,4 +1,4 @@
-{C:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW/HW1/code/datapath.vhdl} {1 {vcom -work work -2002 -explicit {C:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW/HW1/code/datapath.vhdl}
+{C:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW/HW1/code/datapath.vhdl} {0 {vcom -work work -2002 -explicit {C:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW/HW1/code/datapath.vhdl}
 Model Technology ModelSim ALTERA vcom 10.1d Compiler 2012.11 Nov  2 2012
 -- Loading package STANDARD
 -- Loading package TEXTIO
@@ -9,14 +9,30 @@ Model Technology ModelSim ALTERA vcom 10.1d Compiler 2012.11 Nov  2 2012
 -- Compiling entity datapath
 -- Compiling architecture behavioral of datapath
 -- Loading entity reg
--- Loading entity incrementor
 -- Loading entity mux
+** Error: C:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW/HW1/code/datapath.vhdl(84): (vcom-1035) Formal port "c" has OPEN or no actual associated with it.
+
+** Error: C:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW/HW1/code/datapath.vhdl(84): (vcom-1035) Formal port "d" has OPEN or no actual associated with it.
+
+-- Loading entity incrementor
 -- Loading entity address_calculator
 -- Loading package std_logic_textio
 -- Loading entity queue
 -- Loading entity alu
 -- Loading entity TriStateBuffer
 -- Loading entity x_registers
+** Error: C:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW/HW1/code/datapath.vhdl(183): VHDL Compiler exiting
+
+} {13.0 14.0 15.0 16.0 24.0 25.0} {}} {C:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW/HW1/code/controller.vhdl} {1 {vcom -work work -2002 -explicit {C:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW/HW1/code/controller.vhdl}
+Model Technology ModelSim ALTERA vcom 10.1d Compiler 2012.11 Nov  2 2012
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package std_logic_arith
+-- Loading package STD_LOGIC_UNSIGNED
+-- Loading package NUMERIC_STD
+-- Compiling entity controller
+-- Compiling architecture behavioral of controller
 
 } {} {}} {C:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW/HW1/code/testbench.vhdl} {1 {vcom -work work -2002 -explicit {C:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW/HW1/code/testbench.vhdl}
 Model Technology ModelSim ALTERA vcom 10.1d Compiler 2012.11 Nov  2 2012
@@ -70,18 +86,5 @@ Model Technology ModelSim ALTERA vcom 10.1d Compiler 2012.11 Nov  2 2012
 -- Loading package std_logic_arith
 -- Compiling entity memory
 -- Compiling architecture behavioral of memory
-
-} {} {}} {C:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW/HW1/code/8086_processor.vhdl} {1 {vcom -work work -2002 -explicit {C:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW/HW1/code/8086_processor.vhdl}
-Model Technology ModelSim ALTERA vcom 10.1d Compiler 2012.11 Nov  2 2012
--- Loading package STANDARD
--- Loading package TEXTIO
--- Loading package std_logic_1164
--- Loading package std_logic_arith
--- Loading package STD_LOGIC_UNSIGNED
--- Loading package NUMERIC_STD
--- Compiling entity processor
--- Compiling architecture behavioral of processor
--- Loading entity datapath
--- Loading entity controller
 
 } {} {}}
