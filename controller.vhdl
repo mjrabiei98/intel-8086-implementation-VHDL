@@ -56,7 +56,7 @@ END ENTITY controller;
 ARCHITECTURE behavioral OF controller IS
 
     TYPE state IS (idle, fetch, pop_state, move_reg_reg_state, move_reg_mem_state,
-        move_mem_reg_state, mevoe_immediate1, mevoe_immediate2, mul_reg_reg_state1,
+        move_mem_reg_state, mevoe_immediate1, mevoe_immediate2, mevoe_immediate3, mul_reg_reg_state1,
         mul_reg_reg_state2, mul_reg_reg_state3, inc_state1, inc_state2, dec_state1, dec_state2,
         loopz_disp_state, loopz_2, loopz_3, loopz_4);
     SIGNAL pstate, nstate : state := idle;
@@ -114,6 +114,7 @@ BEGIN
         memory_bus_tri <= '0';
         ip_mux_sel <= "00";
         flag_reg_en <= '0';
+        queue_to_bus_tri <= '0';
 
         CASE pstate IS
 
@@ -124,11 +125,11 @@ BEGIN
             WHEN fetch =>
 
                 inst_reg_en <= '1';
-                IF queue_empty = '1'THEN
-                    nstate <= fetch;
-                ELSE
+                -- IF queue_empty = '1'THEN
+                    -- nstate <= fetch;
+                -- ELSE
                     nstate <= pop_state;
-                END IF;
+                -- END IF;
             WHEN pop_state =>
 
                 inst_reg_en <= '0';
@@ -269,6 +270,10 @@ BEGIN
                 ELSIF (inst_reg_out(2 DOWNTO 0) = DX_reg_opcd) THEN
                     dx_en_h <= '1';
                 END IF;
+                nstate <= mevoe_immediate3;
+
+            WHEN mevoe_immediate3 =>
+                    
                 pop_from_queue <= '1';
                 number_of_pop <= 2;
                 nstate <= fetch;

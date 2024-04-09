@@ -26,7 +26,7 @@ begin
 
     process
     begin
-        rst <= '1';
+        wait for 10 ns; rst <= '1';
         wait for 10 ns; rst <= '0';
         wait for 500 ns;
         std.env.stop; -- or std.env.stop;
