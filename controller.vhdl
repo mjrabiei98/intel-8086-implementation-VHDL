@@ -135,9 +135,9 @@ BEGIN
                 inst_reg_en <= '0';
                 pop_from_queue <= '1';
                 IF (inst_reg_out(7 DOWNTO 3) = move_mem_reg_opcd) THEN
-                    IF (queue_out_to_ctrl(7 DOWNTO 6) = "11") THEN -- reg to reg
+                    IF (queue_out_to_ctrl(15 DOWNTO 14) = "11") THEN -- reg to reg
                         nstate <= move_reg_reg_state;
-                    ELSIF (queue_out_to_ctrl(7 DOWNTO 6) = "01" AND inst_reg_out(1) = '1') THEN -- reg to mem
+                    ELSIF (queue_out_to_ctrl(15 DOWNTO 14) = "01") THEN -- reg to mem
                         nstate <= move_reg_mem_state;
                     ELSE -- mem to reg
                         nstate <= move_mem_reg_state;
@@ -241,7 +241,7 @@ BEGIN
                 pop_from_queue <= '1';
                 adr_gen_mux2_sel <= "11";
                 adr_gen_mux1_sel <= "11";
-                pop_from_queue <= '1';
+                -- pop_from_queue <= '1';
                 nstate <= fetch;
                 disable_inst_fetch <= '1';
 
@@ -305,7 +305,7 @@ BEGIN
                 ALU_tri_en <= '1';
                 ax_en <= '1';
                 pop_from_queue <= '1';
-                number_of_pop <= 2;
+                number_of_pop <= 1;
                 nstate <= fetch;
                 -- flag_reg_en <= '1';
 
