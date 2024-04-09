@@ -220,7 +220,7 @@ BEGIN
 
                 pop_from_queue <= '1';
                 mem_write_en <= '1';
-                adr_gen_mux2_sel <= "01";
+                adr_gen_mux2_sel <= "11";
                 adr_gen_mux1_sel <= "11";
                 nstate <= fetch;
                 disable_inst_fetch <= '1';
@@ -239,7 +239,7 @@ BEGIN
 
                 memory_bus_tri <= '1';
                 pop_from_queue <= '1';
-                adr_gen_mux2_sel <= "01";
+                adr_gen_mux2_sel <= "11";
                 adr_gen_mux1_sel <= "11";
                 pop_from_queue <= '1';
                 nstate <= fetch;

@@ -98,7 +98,7 @@ BEGIN
 
     adr_gen_mux2 : ENTITY work.mux(behavioral)
         GENERIC MAP(16)
-        PORT MAP(IP_out, di_out, Si_out, DS_out, adr_gen_mux2_sel, adr_gen_mux2_out);
+        PORT MAP(IP_out, di_out, Si_out, dx_out, adr_gen_mux2_sel, adr_gen_mux2_out);
     address_generator : ENTITY work.address_calculator(behavioral)
         PORT MAP(adr_gen_mux1_out, adr_gen_mux2_out, address_out);
 
