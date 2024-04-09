@@ -33,34 +33,6 @@ Model Technology ModelSim ALTERA vcom 10.1d Compiler 2012.11 Nov  2 2012
 -- Loading entity processor
 -- Loading package ENV
 
-} {} {}} {C:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW/HW1/code/elements.vhdl} {2 {vcom -work work -2002 -explicit {C:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW/HW1/code/elements.vhdl}
-Model Technology ModelSim ALTERA vcom 10.1d Compiler 2012.11 Nov  2 2012
--- Loading package STANDARD
--- Loading package TEXTIO
--- Loading package std_logic_1164
--- Loading package std_logic_arith
--- Loading package STD_LOGIC_UNSIGNED
--- Loading package NUMERIC_STD
--- Compiling entity reg
--- Compiling architecture behavioral of reg
--- Loading package std_logic_textio
--- Compiling entity queue
--- Compiling architecture behavioral of queue
--- Compiling entity incrementor
--- Compiling architecture behavioral of incrementor
--- Compiling entity x_registers
--- Compiling architecture behavioral of x_registers
--- Compiling entity address_calculator
--- Compiling architecture behavioral of address_calculator
--- Compiling entity mux
--- Compiling architecture behavioral of mux
--- Compiling entity alu
--- Compiling architecture Behavioral of alu
-** Warning: C:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW/HW1/code/elements.vhdl(227): (vcom-1083) Implicit array operator "=" always returns FALSE (left length 17 is not equal to right length 16).
-
--- Compiling entity TriStateBuffer
--- Compiling architecture Behavioral of TriStateBuffer
-
 } {} {}} {C:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW/HW1/code/8086_processor.vhdl} {1 {vcom -work work -2002 -explicit {C:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW/HW1/code/8086_processor.vhdl}
 Model Technology ModelSim ALTERA vcom 10.1d Compiler 2012.11 Nov  2 2012
 -- Loading package STANDARD

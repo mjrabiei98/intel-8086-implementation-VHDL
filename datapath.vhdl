@@ -33,7 +33,8 @@ ENTITY datapath IS
         queue_to_bus_tri : IN STD_LOGIC;
         ip_mux_sel : IN STD_LOGIC_VECTOR(1 DOWNTO 0);
         flag_reg_out : OUT STD_LOGIC_VECTOR(7 DOWNTO 0);
-        flag_reg_en : IN STD_LOGIC);
+        flag_reg_en : IN STD_LOGIC;
+        update_IP_loop : IN STD_LOGIC);
 
 END ENTITY datapath;
 
@@ -79,7 +80,7 @@ BEGIN
 
     IP : ENTITY work.reg(behavioral)
         GENERIC MAP(16)
-        PORT MAP(clk, rst, IP_en, inc_out, IP_out);
+        PORT MAP(clk, rst, IP_en, ip_mux_out, IP_out);
 
     ip_queue_temp <= "00000000" & queue_out(7 DOWNTO 0);
 
@@ -90,7 +91,7 @@ BEGIN
         GENERIC MAP(16)
         PORT MAP(IP_out, inc_out);
 
-    IP_en <= NOT(queue_full OR disable_inst_fetch);
+    IP_en <= (NOT(queue_full OR disable_inst_fetch)) or update_IP_loop;
 
     adr_gen_mux1 : ENTITY work.mux(behavioral)
         GENERIC MAP(16)

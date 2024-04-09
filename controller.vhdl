@@ -49,7 +49,8 @@ ENTITY controller IS
         queue_to_bus_tri : OUT STD_LOGIC;
         ip_mux_sel : OUT STD_LOGIC_VECTOR(1 DOWNTO 0);
         flag_reg_out : IN STD_LOGIC_VECTOR(7 DOWNTO 0);
-        flag_reg_en : OUT STD_LOGIC);
+        flag_reg_en : OUT STD_LOGIC;
+        update_IP_loop : OUT STD_LOGIC);
 
 END ENTITY controller;
 
@@ -115,6 +116,7 @@ BEGIN
         ip_mux_sel <= "00";
         flag_reg_en <= '0';
         queue_to_bus_tri <= '0';
+        update_IP_loop <= '0';
 
         CASE pstate IS
 
@@ -126,9 +128,9 @@ BEGIN
 
                 inst_reg_en <= '1';
                 -- IF queue_empty = '1'THEN
-                    -- nstate <= fetch;
+                -- nstate <= fetch;
                 -- ELSE
-                    nstate <= pop_state;
+                nstate <= pop_state;
                 -- END IF;
             WHEN pop_state =>
 
@@ -273,7 +275,7 @@ BEGIN
                 nstate <= mevoe_immediate3;
 
             WHEN mevoe_immediate3 =>
-                    
+
                 pop_from_queue <= '1';
                 number_of_pop <= 2;
                 nstate <= fetch;
@@ -407,11 +409,12 @@ BEGIN
                 alu_op_sel <= "0111";
                 flag_reg_en <= '1';
             WHEN loopz_3 =>
-
+                alu_op_sel <= "0111";
                 alu_tri_en <= '1';
                 cx_en <= '1';
-                IF flag_reg_out(0) = '1' THEN
+                IF flag_reg_out(0) = '0' THEN
                     ip_mux_sel <= "01";
+                    update_IP_loop <= '1';
                     nstate <= loopz_4;
                 ELSE
                     nstate <= fetch;
@@ -419,10 +422,8 @@ BEGIN
 
             WHEN loopz_4 =>
                 nstate <= fetch;
-                disable_inst_fetch <= '1';
                 pop_from_queue <= '1';
                 number_of_pop <= 6;
-
         END CASE;
     END PROCESS;
 

@@ -66,7 +66,13 @@ BEGIN
 
             IF pop = '1' THEN
                 head <= (head + number_of_pop) MOD 6;
-                count <= count - number_of_pop;
+                if number_of_pop = 6 then
+                    count <= 0;
+                    head <= 0;
+                    tail <= 0;
+                else
+                    count <= count - number_of_pop;
+                end if;
             END IF;
 
         END IF;
@@ -246,6 +252,9 @@ BEGIN
                 data_out <= STD_LOGIC_VECTOR(signed(a) + 1);
             WHEN "0111" => -- dec
                 data_out <= STD_LOGIC_VECTOR(signed(a) - 1);
+                if(STD_LOGIC_VECTOR(signed(a) - 1)) = "0000000000000000" then
+                    alu_flag_out(0) <= '1';
+                end if;
             WHEN OTHERS => -- Default or undefined operation
                 data_out <= (OTHERS => 'X');
         END CASE;

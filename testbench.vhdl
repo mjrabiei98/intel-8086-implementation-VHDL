@@ -22,13 +22,13 @@ begin
     processpr_8086: entity work.processor(behavioral)
         port map(clk,rst, address, mem_data_out, write_en, mem_data_in);
     
-    clk <=  not clk after 5 ns when now <= 500 ns else '0';
+    clk <=  not clk after 5 ns when now <= 3000 ns else '0';
 
     process
     begin
         wait for 10 ns; rst <= '1';
         wait for 10 ns; rst <= '0';
-        wait for 500 ns;
+        wait for 3000 ns;
         std.env.stop; -- or std.env.stop;
     end process;
 
