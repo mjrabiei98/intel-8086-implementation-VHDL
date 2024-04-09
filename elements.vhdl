@@ -216,6 +216,7 @@ ARCHITECTURE Behavioral OF alu IS
 BEGIN
     PROCESS (op_sel, a, b)
         VARIABLE sum_extended : STD_LOGIC_VECTOR(16 DOWNTO 0);
+        variable mul_resualt : STD_LOGIC_VECTOR(31 DOWNTO 0);
     BEGIN
         alu_flag_out <= (others => '0');
         CASE op_sel IS
@@ -239,7 +240,8 @@ BEGIN
             WHEN "0100" => -- XOR
                 data_out <= a XOR b;
             WHEN "0101" => -- mult
-                data_out <= STD_LOGIC_VECTOR(unsigned(a) * unsigned(b));
+                mul_resualt := STD_LOGIC_VECTOR(unsigned(a) * unsigned(b));
+                data_out <= mul_resualt(15 downto 0);
             WHEN "0110" => -- inc
                 data_out <= STD_LOGIC_VECTOR(signed(a) + 1);
             WHEN "0111" => -- dec
