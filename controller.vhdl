@@ -56,7 +56,7 @@ END ENTITY controller;
 
 ARCHITECTURE behavioral OF controller IS
 
-    TYPE state IS (idle, fetch, pop_state, move_reg_reg_state, move_reg_mem_state,
+    TYPE state IS (idle, fetch, decode_state, move_reg_reg_state, move_reg_mem_state,
         move_mem_reg_state, mevoe_immediate1, mevoe_immediate2, mevoe_immediate3, mul_reg_reg_state1,
         mul_reg_reg_state2, mul_reg_reg_state3, inc_state1, inc_state2, dec_state1, dec_state2,
         loopz_disp_state, loopz_2, loopz_3, loopz_4);
@@ -130,9 +130,9 @@ BEGIN
                 -- IF queue_empty = '1'THEN
                 -- nstate <= fetch;
                 -- ELSE
-                nstate <= pop_state;
+                nstate <= decode_state;
                 -- END IF;
-            WHEN pop_state =>
+            WHEN decode_state =>
 
                 inst_reg_en <= '0';
                 pop_from_queue <= '1';
