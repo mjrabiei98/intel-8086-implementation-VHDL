@@ -127,11 +127,8 @@ BEGIN
             WHEN fetch =>
 
                 inst_reg_en <= '1';
-                -- IF queue_empty = '1'THEN
-                -- nstate <= fetch;
-                -- ELSE
                 nstate <= decode_state;
-                -- END IF;
+                
             WHEN decode_state =>
 
                 inst_reg_en <= '0';
