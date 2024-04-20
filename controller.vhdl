@@ -22,7 +22,8 @@ ENTITY controller IS
         loop_disp_opcd : STD_LOGIC_VECTOR(7 DOWNTO 0) := "11100010";
         loopz_disp_opcd : STD_LOGIC_VECTOR(7 DOWNTO 0) := "11100001";
         adc_im_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "0001010";
-        add_im_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "0000010");
+        add_im_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "0000010";
+        add_mm_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "0000001");
 
     PORT (
         clk, rst : IN STD_LOGIC;
@@ -63,7 +64,8 @@ ARCHITECTURE behavioral OF controller IS
         mul_reg_reg_state2, mul_reg_reg_state3, inc_state1, inc_state2, dec_state1, dec_state2,
         loopz_disp_state, loopz_2, loopz_3, loopz_4,
         ADC1, ADC2, ADC3, ADC4, ADC5, ADC6,
-        ADD_im1,ADD_im2,ADD_im3,ADD_im4,ADD_im5);
+        ADD_im1, ADD_im2, ADD_im3, ADD_im4, ADD_im5,
+        ADD_mm1, ADD_mm2, ADD_mm3);
     SIGNAL pstate, nstate : state := idle;
 
 BEGIN
@@ -162,6 +164,12 @@ BEGIN
 
                 ELSIF (inst_reg_out(7 DOWNTO 1) = adc_im_opcd) THEN
                     nstate <= ADC1;
+
+                ELSIF (inst_reg_out(7 DOWNTO 1) = add_im_opcd) THEN
+                    nstate <= ADD_im1;
+
+                ELSIF (inst_reg_out(7 DOWNTO 1) = add_mm_opcd) THEN
+                    nstate <= ADD_mm1;
 
                 ELSE
                     nstate <= fetch;
@@ -493,6 +501,71 @@ BEGIN
                 flag_reg_en <= '1';
                 nstate <= fetch;
 
+            WHEN ADD_mm1 =>
+                IF (inst_reg_out(2 DOWNTO 0) = AX_reg_opcd) THEN
+                    ax_tri_en <= '1';
+                ELSIF (inst_reg_out(2 DOWNTO 0) = BX_reg_opcd) THEN
+                    bx_tri_en <= '1';
+                ELSIF (inst_reg_out(2 DOWNTO 0) = CX_reg_opcd) THEN
+                    cx_tri_en <= '1';
+                ELSIF (inst_reg_out(2 DOWNTO 0) = DX_reg_opcd) THEN
+                    dx_tri_en <= '1';
+                ELSIF (inst_reg_out(2 DOWNTO 0) = SP_reg_opcd) THEN
+                    sp_tri_en <= '1';
+                ELSIF (inst_reg_out(2 DOWNTO 0) = BP_reg_opcd) THEN
+                    bp_tri_en <= '1';
+                ELSIF (inst_reg_out(2 DOWNTO 0) = SI_reg_opcd) THEN
+                    si_tri_en <= '1';
+                ELSIF (inst_reg_out(2 DOWNTO 0) = DI_reg_opcd) THEN
+                    di_tri_en <= '1';
+                END IF;
+                alu_temp_reg1_en <= '1';
+                nstate <= ADD_mm2;
+
+            WHEN ADD_mm2 =>
+                IF (inst_reg_out(2 DOWNTO 0) = AX_reg_opcd) THEN
+                    ax_en <= '1';
+                ELSIF (inst_reg_out(2 DOWNTO 0) = BX_reg_opcd) THEN
+                    bx_en <= '1';
+                ELSIF (inst_reg_out(2 DOWNTO 0) = CX_reg_opcd) THEN
+                    cx_en <= '1';
+                ELSIF (inst_reg_out(2 DOWNTO 0) = DX_reg_opcd) THEN
+                    dx_en <= '1';
+                ELSIF (inst_reg_out(2 DOWNTO 0) = SP_reg_opcd) THEN
+                    sp_en <= '1';
+                ELSIF (inst_reg_out(2 DOWNTO 0) = BP_reg_opcd) THEN
+                    bp_en <= '1';
+                ELSIF (inst_reg_out(2 DOWNTO 0) = SI_reg_opcd) THEN
+                    si_en <= '1';
+                ELSIF (inst_reg_out(2 DOWNTO 0) = DI_reg_opcd) THEN
+                    di_en <= '1';
+                END IF;
+                alu_temp_reg1_en <= '1';
+                nstate <= ADD_mm3;
+
+            WHEN ADD_mm3 =>
+                alu_op_sel <= "0000"; --add
+                alu_tri_en <= '1';
+                IF (inst_reg_out(2 DOWNTO 0) = AX_reg_opcd) THEN
+                    ax_tri_en <= '1';
+                ELSIF (inst_reg_out(2 DOWNTO 0) = BX_reg_opcd) THEN
+                    bx_tri_en <= '1';
+                ELSIF (inst_reg_out(2 DOWNTO 0) = CX_reg_opcd) THEN
+                    cx_tri_en <= '1';
+                ELSIF (inst_reg_out(2 DOWNTO 0) = DX_reg_opcd) THEN
+                    dx_tri_en <= '1';
+                ELSIF (inst_reg_out(2 DOWNTO 0) = SP_reg_opcd) THEN
+                    sp_tri_en <= '1';
+                ELSIF (inst_reg_out(2 DOWNTO 0) = BP_reg_opcd) THEN
+                    bp_tri_en <= '1';
+                ELSIF (inst_reg_out(2 DOWNTO 0) = SI_reg_opcd) THEN
+                    si_tri_en <= '1';
+                ELSIF (inst_reg_out(2 DOWNTO 0) = DI_reg_opcd) THEN
+                    di_tri_en <= '1';
+                END IF;
+                flag_reg_en <= '1';
+                pop_from_queue <= '1';
+                nstate <= fetch;
 
         END CASE;
     END PROCESS;
