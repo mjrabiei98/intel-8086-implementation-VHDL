@@ -20,7 +20,8 @@ ENTITY controller IS
         dec_reg_opcd : STD_LOGIC_VECTOR(4 DOWNTO 0) := "01001";
         mul_reg_reg_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "1111011";
         loop_disp_opcd : STD_LOGIC_VECTOR(7 DOWNTO 0) := "11100010";
-        loopz_disp_opcd : STD_LOGIC_VECTOR(7 DOWNTO 0) := "11100001");
+        loopz_disp_opcd : STD_LOGIC_VECTOR(7 DOWNTO 0) := "11100001";
+        adc_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "0001010");
 
     PORT (
         clk, rst : IN STD_LOGIC;
@@ -59,7 +60,8 @@ ARCHITECTURE behavioral OF controller IS
     TYPE state IS (idle, fetch, decode_state, move_reg_reg_state, move_reg_mem_state,
         move_mem_reg_state, mevoe_immediate1, mevoe_immediate2, mevoe_immediate3, mul_reg_reg_state1,
         mul_reg_reg_state2, mul_reg_reg_state3, inc_state1, inc_state2, dec_state1, dec_state2,
-        loopz_disp_state, loopz_2, loopz_3, loopz_4);
+        loopz_disp_state, loopz_2, loopz_3, loopz_4,
+        ADC1, ADC2, ADC3, ADC4, ADC5, ADC6);
     SIGNAL pstate, nstate : state := idle;
 
 BEGIN
@@ -128,7 +130,7 @@ BEGIN
 
                 inst_reg_en <= '1';
                 nstate <= decode_state;
-                
+
             WHEN decode_state =>
 
                 inst_reg_en <= '0';
@@ -155,6 +157,9 @@ BEGIN
 
                 ELSIF (inst_reg_out(7 DOWNTO 0) = loopz_disp_opcd) THEN
                     nstate <= loopz_disp_state;
+
+                ELSIF (inst_reg_out(7 DOWNTO 1) = adc_opcd) THEN
+                    nstate <= ADC1;
 
                 ELSE
                     nstate <= fetch;
@@ -421,6 +426,41 @@ BEGIN
                 nstate <= fetch;
                 pop_from_queue <= '1';
                 number_of_pop <= 6;
+
+            WHEN ADC1 =>
+                queue_to_bus_tri <= '1';
+                bx_en_l <= '1';
+                nstate <= ADC2;
+
+            WHEN ADC2 =>
+                queue_to_bus_tri <= '1';
+                bx_en_h <= '1';
+                nstate <= ADC3;
+
+            WHEN ADC3 =>
+                ax_tri_en <= '1';
+                alu_temp_reg1_en <= '1';
+                nstate <= ADC4;
+                pop_from_queue <= '1';
+
+            WHEN ADC4 =>
+                bx_tri_en <= '1';
+                alu_temp_reg2_en <= '1';
+                pop_from_queue <= '1';
+                nstate <= ADC5;
+
+            WHEN ADC5 =>
+                alu_op_sel <= "0000"; --add
+                alu_tri_en <= '1';
+                alu_temp_reg1_en <= '1';
+                nstate <= ADC6;
+
+            WHEN ADC6 =>
+                alu_op_sel <= "0110"; --inc
+                alu_tri_en <= '1';
+                ax_en <= '1';
+                nstate <= fetch;
+
         END CASE;
     END PROCESS;
 
