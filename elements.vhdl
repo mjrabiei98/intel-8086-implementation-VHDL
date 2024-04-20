@@ -66,13 +66,13 @@ BEGIN
 
             IF pop = '1' THEN
                 head <= (head + number_of_pop) MOD 6;
-                if number_of_pop = 6 then
+                IF number_of_pop = 6 THEN
                     count <= 0;
                     head <= 0;
                     tail <= 0;
-                else
+                ELSE
                     count <= count - number_of_pop;
-                end if;
+                END IF;
             END IF;
 
         END IF;
@@ -222,10 +222,10 @@ ARCHITECTURE Behavioral OF alu IS
 BEGIN
     PROCESS (op_sel, a, b)
         VARIABLE sum_extended : STD_LOGIC_VECTOR(16 DOWNTO 0);
-        variable mul_resualt : STD_LOGIC_VECTOR(31 DOWNTO 0);
-        variable data_out : STD_LOGIC_VECTOR(15 DOWNTO 0);
+        VARIABLE mul_resualt : STD_LOGIC_VECTOR(31 DOWNTO 0);
+        VARIABLE data_out : STD_LOGIC_VECTOR(15 DOWNTO 0);
     BEGIN
-        alu_flag_out <= (others => '0');
+        alu_flag_out <= (OTHERS => '0');
         CASE op_sel IS
             WHEN "0000" => -- Addition
                 sum_extended := STD_LOGIC_VECTOR(unsigned('0' & a) + unsigned('0' & b));
@@ -242,31 +242,33 @@ BEGIN
                 data_out := a XOR b;
             WHEN "0101" => -- mult
                 mul_resualt := STD_LOGIC_VECTOR(signed(a) * signed(b));
-                data_out := mul_resualt(15 downto 0);
+                data_out := mul_resualt(15 DOWNTO 0);
             WHEN "0110" => -- inc
                 data_out := STD_LOGIC_VECTOR(signed(a) + 1);
             WHEN "0111" => -- dec
                 data_out := STD_LOGIC_VECTOR(signed(a) - 1);
-                
-            when "1000" => --ROL_FUNC
-                data_out := std_logic_vector(signed(a) ROL to_integer(signed(b)));
-            when "1001" => -- SRL_FUNC
-                data_out := std_logic_vector(signed(a) SRL to_integer(signed(b)));
-            when "1100" => --SLL_FUNC
-                data_out := std_logic_vector(signed(a) SLL to_integer(signed(b)));
-            when "1101" => --DIV_FUNC
-                data_out := std_logic_vector(signed(a) / signed(b));
-            when "1110" => --ADC_FUNC
-                data_out := std_logic_vector(signed(a) + signed(b));
-            when "1111" => --SL1_FUNC
-                data_out := std_logic_vector(signed(a) SLL 1);
+
+            WHEN "1000" => --ROL_FUNC
+                data_out := STD_LOGIC_VECTOR(signed(a) ROL to_integer(signed(b)));
+            WHEN "1001" => -- SRL_FUNC
+                data_out := STD_LOGIC_VECTOR(signed(a) SRL to_integer(signed(b)));
+            WHEN "1100" => --SLL_FUNC
+                data_out := STD_LOGIC_VECTOR(signed(a) SLL to_integer(signed(b)));
+            WHEN "1101" => --DIV_FUNC
+                data_out := STD_LOGIC_VECTOR(signed(a) / signed(b));
+            WHEN "1110" => --ADC_FUNC
+                data_out := STD_LOGIC_VECTOR(signed(a) + signed(b));
+            WHEN "1111" => --SL1_FUNC
+                data_out := STD_LOGIC_VECTOR(signed(a) SLL 1);
+            WHEN "1011" => --sign extend
+                data_out := (7 downto 0 => a(7)) & a(7 downto 0);
             WHEN OTHERS => -- Default or undefined operation
                 data_out := (OTHERS => 'X');
         END CASE;
         result <= data_out;
-        if data_out = "0000000000000000" then -- zero flag
+        IF data_out = "0000000000000000" THEN -- zero flag
             alu_flag_out(0) <= '1';
-        end if;
+        END IF;
         -- parity
         alu_flag_out(2) <= NOT(data_out(0) XOR data_out(1) XOR data_out(2) XOR data_out(3) XOR data_out(4) XOR data_out(5) XOR data_out(6) XOR data_out(7) XOR data_out(8) XOR data_out(9) XOR data_out(10) XOR data_out(11) XOR data_out(12) XOR data_out(13) XOR data_out(14) XOR data_out(15));
     END PROCESS;

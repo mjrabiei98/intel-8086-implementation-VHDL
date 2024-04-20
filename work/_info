@@ -4,7 +4,7 @@ K3
 cModel Technology
 dC:\Users\mohammad javad\Desktop\uni\arshad tehran university\term 2\VHDL\first try to learn vhdl
 Eaddress_calculator
-Z0 w1712997398
+Z0 w1713628118
 Z1 DPx4 ieee 11 numeric_std 0 22 O3PF8EB`?j9=z7KT`fn941
 Z2 DPx3 std 6 textio 0 22 5>J:;AW>W0[[dW0I6EN1Q0
 Z3 DPx4 ieee 14 std_logic_1164 0 22 5=aWaoGZSMWIcH0i^f`XF1
@@ -16,7 +16,7 @@ L166
 Vg3mY?9g0Ud:LYP]dz]R6n2
 Z7 OV;C;10.1d;51
 32
-Z8 !s108 1713627020.632000
+Z8 !s108 1713628283.842000
 Z9 !s90 -reportprogress|300|-work|work|-2002|-explicit|C:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW/HW1/code/elements.vhdl|
 Z10 !s107 C:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW/HW1/code/elements.vhdl|
 Z11 o-work work -2002 -explicit -O0
@@ -41,7 +41,7 @@ R12
 !s100 EkGN8K`[HloP1TY@0=OQg2
 !i10b 1
 Ealu
-Z14 w1712997398
+Z14 w1713628118
 R1
 R2
 R3
@@ -67,7 +67,7 @@ R3
 Z15 DEx4 work 3 alu 0 22 mPUBgjc]ihLhl^1W05>HB0
 l222
 L221
-VPJbPfQ1QEhZ1Z1bZBBa1i3
+VZ5:Y[n5g:j6?JCKnTUeUz3
 R7
 32
 R8
@@ -75,10 +75,10 @@ R9
 R10
 R11
 R12
-!s100 bIaPDh`C3A39lY7oBXMYa2
+!s100 LV4SSK9MEEIBR]73IVEjC0
 !i10b 1
 Econtroller
-Z16 w1713627017
+Z16 w1713628278
 R1
 Z17 DPx4 ieee 18 std_logic_unsigned 0 22 RYmj;=TK`k=k>D@Cz`zoB3
 Z18 DPx4 ieee 15 std_logic_arith 0 22 4`Y?g_lkdn;7UL9IiJck01
@@ -89,15 +89,15 @@ Z19 8C:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW
 Z20 FC:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW/HW1/code/controller.vhdl
 l0
 L6
-Ve8Hm]5LgWf7hj3m0Ue1]H3
+VaTWcPg1Fhb^RmgVGd:_Ka3
 R7
 32
-Z21 !s108 1713627020.852000
+Z21 !s108 1713628284.062000
 Z22 !s90 -reportprogress|300|-work|work|-2002|-explicit|C:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW/HW1/code/controller.vhdl|
 Z23 !s107 C:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW/HW1/code/controller.vhdl|
 R11
 R12
-!s100 d_`071FeNeXYFJoa<MlS;3
+!s100 jn2C3ZbIQ``NV@WcCc`mi3
 !i10b 1
 Abehavioral
 R1
@@ -105,11 +105,10 @@ R17
 R18
 R2
 R3
-Z24 DEx4 work 10 controller 0 22 e8Hm]5LgWf7hj3m0Ue1]H3
-l71
-L60
-VhMHcdb<abB>aORHU8>9Hz2
-!s100 MK07f6<gib9DoD2?5jWjH0
+Z24 DEx4 work 10 controller 0 22 aTWcPg1Fhb^RmgVGd:_Ka3
+l73
+L61
+V=eMk:B;66BcFN^c@mgO0L2
 R7
 32
 R21
@@ -117,6 +116,7 @@ R22
 R23
 R11
 R12
+!s100 N7NSYKHS@@@<g43]4acH[1
 !i10b 1
 Edatapath
 Z25 w1712652790
@@ -133,7 +133,7 @@ L6
 V@`O^XgcDbE@oacWT=]>M]2
 R7
 32
-Z28 !s108 1713627020.820000
+Z28 !s108 1713628284.017000
 Z29 !s90 -reportprogress|300|-work|work|-2002|-explicit|C:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW/HW1/code/datapath.vhdl|
 Z30 !s107 C:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW/HW1/code/datapath.vhdl|
 R11
@@ -287,7 +287,7 @@ L11
 VB]I`2[nz7ZYSj3IScjo0?3
 R7
 32
-Z45 !s108 1713627020.773000
+Z45 !s108 1713628283.983000
 Z46 !s90 -reportprogress|300|-work|work|-2002|-explicit|C:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW/HW1/code/memory.vhdl|
 Z47 !s107 C:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW/HW1/code/memory.vhdl|
 R11
@@ -399,7 +399,7 @@ VZ]eTz1]^U=8Qkbz5zV9L<1
 R7
 32
 !i10b 1
-Z54 !s108 1713627020.900000
+Z54 !s108 1713628284.118000
 Z55 !s90 -reportprogress|300|-work|work|-2002|-explicit|C:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW/HW1/code/8086_processor.vhdl|
 Z56 !s107 C:/Users/mohammad javad/Desktop/uni/arshad tehran university/term 2/VHDL/HW/HW1/code/8086_processor.vhdl|
 R11
@@ -599,7 +599,7 @@ L4
 VB6JRKX>U3F7^SJc39KAPS0
 R7
 32
-Z68 !s108 1713627020.726000
+Z68 !s108 1713628283.936000
 R64
 R65
 R11
@@ -639,7 +639,7 @@ R4
 R5
 R6
 l0
-L280
+L282
 V3]aVFGH_J=RZPfgI^DJNz0
 R7
 32
@@ -648,7 +648,7 @@ R9
 R10
 R11
 R12
-!s100 NX54bmc_6g^2a8zhKa;6o2
+!s100 :GFEHkLQQ`E4aNYi;F:YE2
 !i10b 1
 Abehavioral
 R17
@@ -656,8 +656,8 @@ R18
 R2
 R3
 R32
-l290
-L289
+l292
+L291
 VUPI?`U?US_U<nJ4CzLRdG2
 R7
 32
@@ -666,7 +666,7 @@ R9
 R10
 R11
 R12
-!s100 1?DZbm:]Sm?O8zf>0Y4cO3
+!s100 ?^nGCmFUNU8ioE:4CVHdZ1
 !i10b 1
 Ex_registers
 R14

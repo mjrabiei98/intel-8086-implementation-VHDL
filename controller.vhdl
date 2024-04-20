@@ -23,7 +23,8 @@ ENTITY controller IS
         loopz_disp_opcd : STD_LOGIC_VECTOR(7 DOWNTO 0) := "11100001";
         adc_im_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "0001010";
         add_im_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "0000010";
-        add_mm_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "0000001");
+        add_mm_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "0000001";
+        cbw_opcd : STD_LOGIC_VECTOR(7 DOWNTO 0) := "01100010");
 
     PORT (
         clk, rst : IN STD_LOGIC;
@@ -65,7 +66,8 @@ ARCHITECTURE behavioral OF controller IS
         loopz_disp_state, loopz_2, loopz_3, loopz_4,
         ADC1, ADC2, ADC3, ADC4, ADC5, ADC6,
         ADD_im1, ADD_im2, ADD_im3, ADD_im4, ADD_im5,
-        ADD_mm1, ADD_mm2, ADD_mm3);
+        ADD_mm1, ADD_mm2, ADD_mm3,
+        cbw1, cbw2);
     SIGNAL pstate, nstate : state := idle;
 
 BEGIN
@@ -170,6 +172,9 @@ BEGIN
 
                 ELSIF (inst_reg_out(7 DOWNTO 1) = add_mm_opcd) THEN
                     nstate <= ADD_mm1;
+
+                ELSIF (inst_reg_out(7 DOWNTO 0) = cbw_opcd) THEN
+                    nstate <= cbw1;
 
                 ELSE
                     nstate <= fetch;
@@ -564,6 +569,18 @@ BEGIN
                     di_tri_en <= '1';
                 END IF;
                 flag_reg_en <= '1';
+                pop_from_queue <= '1';
+                nstate <= fetch;
+
+            WHEN cbw1 =>
+                ax_tri_en <= '1';
+                alu_temp_reg1_en <= '1';
+                nstate <= cbw2;
+
+            WHEN cbw2 =>
+                alu_op_sel <= "1011"; --signextend
+                alu_tri_en <= '1';
+                ax_en <= '1';
                 pop_from_queue <= '1';
                 nstate <= fetch;
 
