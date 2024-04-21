@@ -31,6 +31,7 @@ ENTITY controller IS
         neg_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "1111001";
         sbb_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "0001110";
         scas_opcd : STD_LOGIC_VECTOR(5 DOWNTO 0) := "101011";
+        and_im_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "0010010";
         cbw_opcd : STD_LOGIC_VECTOR(7 DOWNTO 0) := "01100010");
 
     PORT (
@@ -75,7 +76,8 @@ ARCHITECTURE behavioral OF controller IS
         ADD_im1, ADD_im2, ADD_im3, ADD_im4, ADD_im5,
         ADD_mm1, ADD_mm2, ADD_mm3,
         cbw1, cbw2, cmp_rr1, cmp_rr2, cmp_rr3, cmps1, cmps2, cmps3, cwd1, cwd2, cwd3,
-        neg1, neg2, neg3, SBB1, SBB2, SBB3, SBB4, SBB5, SBB6, scas1, scas2, scas3);
+        neg1, neg2, neg3, SBB1, SBB2, SBB3, SBB4, SBB5, SBB6, scas1, scas2, scas3,
+        and_im1, and_im2, and_im3, and_im4, and_im5, and_im6);
     SIGNAL pstate, nstate : state := idle;
 
 BEGIN
@@ -201,6 +203,9 @@ BEGIN
 
                 ELSIF (inst_reg_out(7 DOWNTO 2) = scas_opcd) THEN
                     nstate <= scas1;
+
+                ELSIF (inst_reg_out(7 DOWNTO 1) = and_im_opcd) THEN
+                    nstate <= and_im1;
 
                 ELSE
                     nstate <= fetch;
@@ -762,6 +767,40 @@ BEGIN
                 flag_reg_en <= '1';
                 nstate <= fetch;
                 pop_from_queue <= '1';
+
+            WHEN and_im1 =>
+                queue_to_bus_tri <= '1';
+                bx_en_l <= '1';
+                nstate <= and_im2;
+
+            WHEN and_im2 =>
+                queue_to_bus_tri <= '1';
+                bx_en_h <= '1';
+                nstate <= and_im3;
+
+            WHEN and_im3 =>
+                ax_tri_en <= '1';
+                alu_temp_reg1_en <= '1';
+                nstate <= and_im4;
+                pop_from_queue <= '1';
+
+            WHEN and_im4 =>
+                bx_tri_en <= '1';
+                alu_temp_reg2_en <= '1';
+                pop_from_queue <= '1';
+                nstate <= and_im5;
+
+            WHEN and_im5 =>
+                alu_op_sel <= "0010"; --and
+                alu_tri_en <= '1';
+                alu_temp_reg1_en <= '1';
+                nstate <= and_im6;
+
+            WHEN and_im6 =>
+                alu_tri_en <= '1';
+                ax_en <= '1';
+                nstate <= fetch;
+                flag_reg_en <= '1';
 
         END CASE;
     END PROCESS;
