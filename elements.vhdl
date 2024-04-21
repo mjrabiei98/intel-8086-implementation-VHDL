@@ -248,6 +248,9 @@ BEGIN
             WHEN "0111" => -- dec
                 data_out := STD_LOGIC_VECTOR(signed(a) - 1);
 
+            WHEN "1010" => -- not
+                data_out := (not(a));
+
             WHEN "1000" => --ROL_FUNC
                 data_out := STD_LOGIC_VECTOR(signed(a) ROL to_integer(signed(b)));
             WHEN "1001" => -- SRL_FUNC
@@ -261,7 +264,7 @@ BEGIN
             WHEN "1111" => --SL1_FUNC
                 data_out := STD_LOGIC_VECTOR(signed(a) SLL 1);
             WHEN "1011" => --sign extend
-                data_out := (7 downto 0 => a(7)) & a(7 downto 0);
+                data_out := (7 DOWNTO 0 => a(7)) & a(7 DOWNTO 0);
             WHEN OTHERS => -- Default or undefined operation
                 data_out := (OTHERS => 'X');
         END CASE;

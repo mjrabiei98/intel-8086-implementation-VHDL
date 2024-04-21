@@ -27,6 +27,8 @@ ENTITY controller IS
         cmp_reg_reg_opcd : STD_LOGIC_VECTOR(5 DOWNTO 0) := "001110";
         cmps_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "1010011";
         cwd_opcd : STD_LOGIC_VECTOR(7 DOWNTO 0) := "01100011";
+        imul_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "1111010";
+        neg_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "1111001";
         cbw_opcd : STD_LOGIC_VECTOR(7 DOWNTO 0) := "01100010");
 
     PORT (
@@ -70,7 +72,8 @@ ARCHITECTURE behavioral OF controller IS
         ADC1, ADC2, ADC3, ADC4, ADC5, ADC6,
         ADD_im1, ADD_im2, ADD_im3, ADD_im4, ADD_im5,
         ADD_mm1, ADD_mm2, ADD_mm3,
-        cbw1, cbw2, cmp_rr1, cmp_rr2, cmp_rr3, cmps1, cmps2, cmps3, cwd1, cwd2, cwd3);
+        cbw1, cbw2, cmp_rr1, cmp_rr2, cmp_rr3, cmps1, cmps2, cmps3, cwd1, cwd2, cwd3,
+        neg1, neg2, neg3);
     SIGNAL pstate, nstate : state := idle;
 
 BEGIN
@@ -188,6 +191,8 @@ BEGIN
                 ELSIF (inst_reg_out(7 DOWNTO 0) = cwd_opcd) THEN
                     nstate <= cwd1;
 
+                ELSIF (inst_reg_out(7 DOWNTO 1) = neg_opcd) THEN
+                    nstate <= neg1;
                 ELSE
                     nstate <= fetch;
 
@@ -661,6 +666,37 @@ BEGIN
             WHEN cwd3 =>
                 alu_tri_en <= '1';
                 di_en <= '1';
+                nstate <= fetch;
+
+            WHEN neg1 =>
+                alu_temp_reg1_en <= '1';
+                IF (queue_out_to_ctrl(2 DOWNTO 0) = AX_reg_opcd) THEN
+                    ax_tri_en <= '1';
+                ELSIF (queue_out_to_ctrl(2 DOWNTO 0) = BX_reg_opcd) THEN
+                    bx_tri_en <= '1';
+                ELSIF (queue_out_to_ctrl(2 DOWNTO 0) = CX_reg_opcd) THEN
+                    cx_tri_en <= '1';
+                ELSIF (queue_out_to_ctrl(2 DOWNTO 0) = DX_reg_opcd) THEN
+                    dx_tri_en <= '1';
+                END IF;
+                nstate <= neg2;
+
+            WHEN neg2 =>
+                alu_op_sel <= "1010"; --not
+                nstate <= neg3;
+
+            WHEN neg3 =>
+                alu_tri_en <= '1';
+                IF (queue_out_to_ctrl(2 DOWNTO 0) = AX_reg_opcd) THEN
+                    ax_en <= '1';
+                ELSIF (queue_out_to_ctrl(2 DOWNTO 0) = BX_reg_opcd) THEN
+                    bx_en <= '1';
+                ELSIF (queue_out_to_ctrl(2 DOWNTO 0) = CX_reg_opcd) THEN
+                    cx_en <= '1';
+                ELSIF (queue_out_to_ctrl(2 DOWNTO 0) = DX_reg_opcd) THEN
+                    dx_en <= '1';
+                END IF;
+                pop_from_queue <= '1';
                 nstate <= fetch;
 
         END CASE;
