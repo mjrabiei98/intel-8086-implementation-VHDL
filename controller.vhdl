@@ -24,6 +24,7 @@ ENTITY controller IS
         adc_im_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "0001010";
         add_im_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "0000010";
         add_mm_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "0000001";
+        cmp_reg_reg_opcd : STD_LOGIC_VECTOR(5 DOWNTO 0) := "001110";
         cbw_opcd : STD_LOGIC_VECTOR(7 DOWNTO 0) := "01100010");
 
     PORT (
@@ -67,7 +68,7 @@ ARCHITECTURE behavioral OF controller IS
         ADC1, ADC2, ADC3, ADC4, ADC5, ADC6,
         ADD_im1, ADD_im2, ADD_im3, ADD_im4, ADD_im5,
         ADD_mm1, ADD_mm2, ADD_mm3,
-        cbw1, cbw2);
+        cbw1, cbw2, cmp_rr1, cmp_rr2, cmp_rr3);
     SIGNAL pstate, nstate : state := idle;
 
 BEGIN
@@ -175,6 +176,9 @@ BEGIN
 
                 ELSIF (inst_reg_out(7 DOWNTO 0) = cbw_opcd) THEN
                     nstate <= cbw1;
+
+                ELSIF (inst_reg_out(7 DOWNTO 2) = cmp_reg_reg_opcd) THEN
+                    nstate <= cmp_rr1;
 
                 ELSE
                     nstate <= fetch;
@@ -582,6 +586,38 @@ BEGIN
                 alu_tri_en <= '1';
                 ax_en <= '1';
                 pop_from_queue <= '1';
+                nstate <= fetch;
+
+            WHEN cmp_rr1 =>
+                IF (queue_out_to_ctrl(5 DOWNTO 3) = AX_reg_opcd) THEN
+                    ax_tri_en <= '1';
+                ELSIF (queue_out_to_ctrl(5 DOWNTO 3) = BX_reg_opcd) THEN
+                    bx_tri_en <= '1';
+                ELSIF (queue_out_to_ctrl(5 DOWNTO 3) = CX_reg_opcd) THEN
+                    cx_tri_en <= '1';
+                ELSIF (queue_out_to_ctrl(5 DOWNTO 3) = DX_reg_opcd) THEN
+                    dx_tri_en <= '1';
+                END IF;
+                alu_temp_reg1_en <= '1';
+                nstate <= cmp_rr2;
+
+            WHEN cmp_rr2 =>
+                IF (queue_out_to_ctrl(2 DOWNTO 0) = AX_reg_opcd) THEN
+                    ax_tri_en <= '1';
+                ELSIF (queue_out_to_ctrl(2 DOWNTO 0) = BX_reg_opcd) THEN
+                    bx_tri_en <= '1';
+                ELSIF (queue_out_to_ctrl(2 DOWNTO 0) = CX_reg_opcd) THEN
+                    cx_tri_en <= '1';
+                ELSIF (queue_out_to_ctrl(2 DOWNTO 0) = DX_reg_opcd) THEN
+                    dx_tri_en <= '1';
+                END IF;
+                alu_temp_reg2_en <= '1';
+                nstate <= cmp_rr3;
+
+            WHEN cmp_rr3 =>
+                alu_op_sel <= "0001"; --subtract
+                pop_from_queue <= '1';
+                flag_reg_en <= '1';
                 nstate <= fetch;
 
         END CASE;
