@@ -26,6 +26,7 @@ ENTITY controller IS
         add_mm_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "0000001";
         cmp_reg_reg_opcd : STD_LOGIC_VECTOR(5 DOWNTO 0) := "001110";
         cmps_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "1010011";
+        cwd_opcd : STD_LOGIC_VECTOR(7 DOWNTO 0) := "01100011";
         cbw_opcd : STD_LOGIC_VECTOR(7 DOWNTO 0) := "01100010");
 
     PORT (
@@ -69,7 +70,7 @@ ARCHITECTURE behavioral OF controller IS
         ADC1, ADC2, ADC3, ADC4, ADC5, ADC6,
         ADD_im1, ADD_im2, ADD_im3, ADD_im4, ADD_im5,
         ADD_mm1, ADD_mm2, ADD_mm3,
-        cbw1, cbw2, cmp_rr1, cmp_rr2, cmp_rr3, cmps1, cmps2, cmps3);
+        cbw1, cbw2, cmp_rr1, cmp_rr2, cmp_rr3, cmps1, cmps2, cmps3, cwd1, cwd2, cwd3);
     SIGNAL pstate, nstate : state := idle;
 
 BEGIN
@@ -183,6 +184,9 @@ BEGIN
 
                 ELSIF (inst_reg_out(7 DOWNTO 1) = cmps_opcd) THEN
                     nstate <= cmps1;
+
+                ELSIF (inst_reg_out(7 DOWNTO 0) = cwd_opcd) THEN
+                    nstate <= cwd1;
 
                 ELSE
                     nstate <= fetch;
@@ -643,6 +647,20 @@ BEGIN
             WHEN cmps3 =>
                 alu_op_sel <= "0001"; --subtract
                 flag_reg_en <= '1';
+                nstate <= fetch;
+
+            WHEN cwd1 =>
+                alu_temp_reg1_en <= '1';
+                ax_tri_en <= '1';
+                nstate <= cwd2;
+
+            WHEN cwd2 =>
+                alu_op_sel <= "1011"; --signextend
+                nstate <= cwd3;
+
+            WHEN cwd3 =>
+                alu_tri_en <= '1';
+                di_en <= '1';
                 nstate <= fetch;
 
         END CASE;
