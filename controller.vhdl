@@ -30,6 +30,7 @@ ENTITY controller IS
         imul_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "1111010";
         neg_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "1111001";
         sbb_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "0001110";
+        scas_opcd : STD_LOGIC_VECTOR(5 DOWNTO 0) := "101011";
         cbw_opcd : STD_LOGIC_VECTOR(7 DOWNTO 0) := "01100010");
 
     PORT (
@@ -74,7 +75,7 @@ ARCHITECTURE behavioral OF controller IS
         ADD_im1, ADD_im2, ADD_im3, ADD_im4, ADD_im5,
         ADD_mm1, ADD_mm2, ADD_mm3,
         cbw1, cbw2, cmp_rr1, cmp_rr2, cmp_rr3, cmps1, cmps2, cmps3, cwd1, cwd2, cwd3,
-        neg1, neg2, neg3, SBB1, SBB2, SBB3, SBB4, SBB5, SBB6);
+        neg1, neg2, neg3, SBB1, SBB2, SBB3, SBB4, SBB5, SBB6, scas1, scas2, scas3);
     SIGNAL pstate, nstate : state := idle;
 
 BEGIN
@@ -197,6 +198,9 @@ BEGIN
 
                 ELSIF (inst_reg_out(7 DOWNTO 1) = sbb_opcd) THEN
                     nstate <= SBB1;
+
+                ELSIF (inst_reg_out(7 DOWNTO 2) = scas_opcd) THEN
+                    nstate <= scas1;
 
                 ELSE
                     nstate <= fetch;
@@ -737,6 +741,27 @@ BEGIN
                 ax_en <= '1';
                 nstate <= fetch;
                 flag_reg_en <= '1';
+
+            WHEN scas1 =>
+                adr_gen_mux1_sel <= "01";
+                adr_gen_mux2_sel <= "11";
+                disable_inst_fetch <= '1';
+                memory_bus_tri <= '1';
+                alu_temp_reg1_en <= '1';
+                nstate <= scas2;
+
+            WHEN scas2 =>
+                ax_tri_en <= '1';
+                alu_temp_reg2_en <= '1';
+                nstate <= scas3;
+
+            WHEN scas3 =>
+                alu_op_sel <= "0001"; --sub
+                ax_en <= '1';
+                alu_tri_en <= '1';
+                flag_reg_en <= '1';
+                nstate <= fetch;
+                pop_from_queue <= '1';
 
         END CASE;
     END PROCESS;
