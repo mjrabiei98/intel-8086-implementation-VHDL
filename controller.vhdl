@@ -29,6 +29,7 @@ ENTITY controller IS
         cwd_opcd : STD_LOGIC_VECTOR(7 DOWNTO 0) := "01100011";
         imul_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "1111010";
         neg_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "1111001";
+        sbb_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "0001110";
         cbw_opcd : STD_LOGIC_VECTOR(7 DOWNTO 0) := "01100010");
 
     PORT (
@@ -73,7 +74,7 @@ ARCHITECTURE behavioral OF controller IS
         ADD_im1, ADD_im2, ADD_im3, ADD_im4, ADD_im5,
         ADD_mm1, ADD_mm2, ADD_mm3,
         cbw1, cbw2, cmp_rr1, cmp_rr2, cmp_rr3, cmps1, cmps2, cmps3, cwd1, cwd2, cwd3,
-        neg1, neg2, neg3);
+        neg1, neg2, neg3, SBB1, SBB2, SBB3, SBB4, SBB5, SBB6);
     SIGNAL pstate, nstate : state := idle;
 
 BEGIN
@@ -193,6 +194,10 @@ BEGIN
 
                 ELSIF (inst_reg_out(7 DOWNTO 1) = neg_opcd) THEN
                     nstate <= neg1;
+
+                ELSIF (inst_reg_out(7 DOWNTO 1) = sbb_opcd) THEN
+                    nstate <= SBB1;
+
                 ELSE
                     nstate <= fetch;
 
@@ -698,6 +703,40 @@ BEGIN
                 END IF;
                 pop_from_queue <= '1';
                 nstate <= fetch;
+
+            WHEN SBB1 =>
+                queue_to_bus_tri <= '1';
+                bx_en_l <= '1';
+                nstate <= SBB2;
+
+            WHEN SBB2 =>
+                queue_to_bus_tri <= '1';
+                bx_en_h <= '1';
+                nstate <= SBB3;
+
+            WHEN SBB3 =>
+                ax_tri_en <= '1';
+                alu_temp_reg1_en <= '1';
+                nstate <= SBB4;
+                pop_from_queue <= '1';
+
+            WHEN SBB4 =>
+                bx_tri_en <= '1';
+                alu_temp_reg2_en <= '1';
+                pop_from_queue <= '1';
+                nstate <= SBB5;
+
+            WHEN SBB5 =>
+                alu_op_sel <= "0001"; --sub
+                alu_tri_en <= '1';
+                alu_temp_reg1_en <= '1';
+                nstate <= SBB6;
+
+            WHEN SBB6 =>
+                alu_tri_en <= '1';
+                ax_en <= '1';
+                nstate <= fetch;
+                flag_reg_en <= '1';
 
         END CASE;
     END PROCESS;
