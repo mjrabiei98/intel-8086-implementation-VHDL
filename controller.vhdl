@@ -34,6 +34,7 @@ ENTITY controller IS
         and_im_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "0010010";
         and_reg_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "1000000";
         not_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "1111000";
+        or_im_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "0000110";
         cbw_opcd : STD_LOGIC_VECTOR(7 DOWNTO 0) := "01100010");
 
     PORT (
@@ -80,7 +81,8 @@ ARCHITECTURE behavioral OF controller IS
         cbw1, cbw2, cmp_rr1, cmp_rr2, cmp_rr3, cmps1, cmps2, cmps3, cwd1, cwd2, cwd3,
         neg1, neg2, neg3, SBB1, SBB2, SBB3, SBB4, SBB5, SBB6, scas1, scas2, scas3,
         and_im1, and_im2, and_im3, and_im4, and_im5, and_im6,
-        and_reg1, and_reg2, and_reg3, and_reg4, and_reg5, not1, not2, not3);
+        and_reg1, and_reg2, and_reg3, and_reg4, and_reg5, not1, not2, not3, or_im1, or_im2, or_im3, or_im4, or_im5, or_im6);
+
     SIGNAL pstate, nstate : state := idle;
 
 BEGIN
@@ -215,6 +217,9 @@ BEGIN
 
                 ELSIF (inst_reg_out(7 DOWNTO 1) = not_opcd) THEN
                     nstate <= not1;
+
+                ELSIF (inst_reg_out(7 DOWNTO 1) = or_im_opcd) THEN
+                    nstate <= or_im1;
 
                 ELSE
                     nstate <= fetch;
@@ -887,6 +892,40 @@ BEGIN
                 ALU_tri_en <= '1';
                 pop_from_queue <= '1';
                 nstate <= fetch;
+
+            WHEN or_im1 =>
+                queue_to_bus_tri <= '1';
+                bx_en_l <= '1';
+                nstate <= or_im2;
+
+            WHEN or_im2 =>
+                queue_to_bus_tri <= '1';
+                bx_en_h <= '1';
+                nstate <= or_im3;
+
+            WHEN or_im3 =>
+                ax_tri_en <= '1';
+                alu_temp_reg1_en <= '1';
+                nstate <= or_im4;
+                pop_from_queue <= '1';
+
+            WHEN or_im4 =>
+                bx_tri_en <= '1';
+                alu_temp_reg2_en <= '1';
+                pop_from_queue <= '1';
+                nstate <= or_im5;
+
+            WHEN or_im5 =>
+                alu_op_sel <= "0011"; --or
+                alu_tri_en <= '1';
+                alu_temp_reg1_en <= '1';
+                nstate <= or_im6;
+
+            WHEN or_im6 =>
+                alu_tri_en <= '1';
+                ax_en <= '1';
+                nstate <= fetch;
+                flag_reg_en <= '1';
 
         END CASE;
     END PROCESS;
