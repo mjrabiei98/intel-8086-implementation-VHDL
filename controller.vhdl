@@ -36,6 +36,7 @@ ENTITY controller IS
         not_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "1111000";
         or_im_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "0000110";
         rol_opcd : STD_LOGIC_VECTOR(5 DOWNTO 0) := "110100";
+        sar_opcd : STD_LOGIC_VECTOR(5 DOWNTO 0) := "110100";
         cbw_opcd : STD_LOGIC_VECTOR(7 DOWNTO 0) := "01100010");
 
     PORT (
@@ -83,7 +84,7 @@ ARCHITECTURE behavioral OF controller IS
         neg1, neg2, neg3, SBB1, SBB2, SBB3, SBB4, SBB5, SBB6, scas1, scas2, scas3,
         and_im1, and_im2, and_im3, and_im4, and_im5, and_im6,
         and_reg1, and_reg2, and_reg3, and_reg4, and_reg5, not1, not2, not3, or_im1, or_im2, or_im3, or_im4, or_im5, or_im6,
-        rol1, rol2, rol3, ror1, ror2, ror3);
+        rol1, rol2, rol3, ror1, ror2, ror3, sar1, sar2, sar3);
 
     SIGNAL pstate, nstate : state := idle;
 
@@ -228,6 +229,9 @@ BEGIN
 
                 ELSIF (inst_reg_out(7 DOWNTO 2) = rol_opcd AND queue_out_to_ctrl(5 DOWNTO 3) = "001") THEN
                     nstate <= ror1;
+
+                ELSIF (inst_reg_out(7 DOWNTO 2) = sar_opcd AND queue_out_to_ctrl(5 DOWNTO 3) = "111") THEN
+                    nstate <= sar1;
 
                 ELSE
                     nstate <= fetch;
@@ -989,6 +993,40 @@ BEGIN
 
             WHEN ror3 =>
                 alu_op_sel <= "1110"; --rol
+                alu_tri_en <= '1';
+                IF (queue_out_to_ctrl(2 DOWNTO 0) = AX_reg_opcd) THEN
+                    ax_en <= '1';
+                ELSIF (queue_out_to_ctrl(2 DOWNTO 0) = BX_reg_opcd) THEN
+                    bx_en <= '1';
+                ELSIF (queue_out_to_ctrl(2 DOWNTO 0) = CX_reg_opcd) THEN
+                    cx_en <= '1';
+                ELSIF (queue_out_to_ctrl(2 DOWNTO 0) = DX_reg_opcd) THEN
+                    dx_en <= '1';
+                END IF;
+                pop_from_queue <= '1';
+                nstate <= fetch;
+                flag_reg_en <= '1';
+
+            WHEN sar1 =>
+                IF (queue_out_to_ctrl(2 DOWNTO 0) = AX_reg_opcd) THEN
+                    ax_tri_en <= '1';
+                ELSIF (queue_out_to_ctrl(2 DOWNTO 0) = BX_reg_opcd) THEN
+                    bx_tri_en <= '1';
+                ELSIF (queue_out_to_ctrl(2 DOWNTO 0) = CX_reg_opcd) THEN
+                    cx_tri_en <= '1';
+                ELSIF (queue_out_to_ctrl(2 DOWNTO 0) = DX_reg_opcd) THEN
+                    dx_tri_en <= '1';
+                END IF;
+                alu_temp_reg1_en <= '1';
+                nstate <= sar2;
+
+            WHEN sar2 =>
+                cx_tri_en <= '1';
+                alu_temp_reg2_en <= '1';
+                nstate <= sar3;
+
+            WHEN sar3 =>
+                alu_op_sel <= "1001"; --rol
                 alu_tri_en <= '1';
                 IF (queue_out_to_ctrl(2 DOWNTO 0) = AX_reg_opcd) THEN
                     ax_en <= '1';
