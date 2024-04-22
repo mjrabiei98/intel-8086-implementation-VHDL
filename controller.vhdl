@@ -38,7 +38,8 @@ ENTITY controller IS
         rol_opcd : STD_LOGIC_VECTOR(5 DOWNTO 0) := "110100";
         sar_opcd : STD_LOGIC_VECTOR(5 DOWNTO 0) := "110100";
         sal_opcd : STD_LOGIC_VECTOR(5 DOWNTO 0) := "110100";
-        test_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "1010100";
+        test_im_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "1010100";
+        xor_im_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "1010100";
         cbw_opcd : STD_LOGIC_VECTOR(7 DOWNTO 0) := "01100010");
 
     PORT (
@@ -86,7 +87,8 @@ ARCHITECTURE behavioral OF controller IS
         neg1, neg2, neg3, SBB1, SBB2, SBB3, SBB4, SBB5, SBB6, scas1, scas2, scas3,
         and_im1, and_im2, and_im3, and_im4, and_im5, and_im6,
         and_reg1, and_reg2, and_reg3, and_reg4, and_reg5, not1, not2, not3, or_im1, or_im2, or_im3, or_im4, or_im5, or_im6,
-        rol1, rol2, rol3, ror1, ror2, ror3, sar1, sar2, sar3, sal1, sal2, sal3, test1, test2, test3, test4, test5);
+        rol1, rol2, rol3, ror1, ror2, ror3, sar1, sar2, sar3, sal1, sal2, sal3, test1, test2, test3, test4, test5,
+        xor1, xor2, xor3, xor4, xor5);
 
     SIGNAL pstate, nstate : state := idle;
 
@@ -238,8 +240,11 @@ BEGIN
                 ELSIF (inst_reg_out(7 DOWNTO 2) = sal_opcd AND queue_out_to_ctrl(5 DOWNTO 3) = "100") THEN
                     nstate <= sal1;
 
-                ELSIF (inst_reg_out(7 DOWNTO 1) = test_opcd) THEN
+                ELSIF (inst_reg_out(7 DOWNTO 1) = test_im_opcd) THEN
                     nstate <= test1;
+
+                ELSIF (inst_reg_out(7 DOWNTO 1) = xor_im_opcd) THEN
+                    nstate <= xor1;
 
                 ELSE
                     nstate <= fetch;
@@ -1105,7 +1110,34 @@ BEGIN
 
             WHEN test5 =>
                 alu_op_sel <= "0010"; --and
+                flag_reg_en <= '1';
+                nstate <= fetch;
+
+            WHEN xor1 =>
+                ax_tri_en <= '1';
+                alu_temp_reg1_en <= '1';
+                nstate <= xor2;
+
+            WHEN xor2 =>
+                bx_en_l <= '1';
+                queue_to_bus_tri <= '1';
+                nstate <= xor3;
+
+            WHEN xor3 =>
+                queue_to_bus_tri <= '1';
+                bx_en_h <= '1';
+                nstate <= xor4;
+
+            WHEN xor4 =>
+                bx_tri_en <= '1';
+                alu_temp_reg2_en <= '1';
+                pop_from_queue <= '1';
+                nstate <= xor5;
+
+            WHEN xor5 =>
+                alu_op_sel <= "0010"; --and
                 alu_tri_en <= '1';
+                ax_en <= '1';
                 flag_reg_en <= '1';
                 nstate <= fetch;
 
