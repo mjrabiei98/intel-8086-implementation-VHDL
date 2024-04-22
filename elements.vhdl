@@ -259,8 +259,8 @@ BEGIN
                 data_out := STD_LOGIC_VECTOR(signed(a) SLL to_integer(signed(b)));
             WHEN "1101" => --DIV_FUNC
                 data_out := STD_LOGIC_VECTOR(signed(a) / signed(b));
-            WHEN "1110" => --ADC_FUNC
-                data_out := STD_LOGIC_VECTOR(signed(a) + signed(b));
+            WHEN "1110" => --ROR_FUNC
+                data_out := STD_LOGIC_VECTOR(signed(a) ROR to_integer(signed(b)));
             WHEN "1111" => --SL1_FUNC
                 data_out := STD_LOGIC_VECTOR(signed(a) SLL 1);
             WHEN "1011" => --sign extend
