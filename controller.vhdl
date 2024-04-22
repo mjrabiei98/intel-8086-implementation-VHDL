@@ -43,6 +43,7 @@ ENTITY controller IS
         ja_opcd : STD_LOGIC_VECTOR(7 DOWNTO 0) := "01001101";
         jae_opcd : STD_LOGIC_VECTOR(7 DOWNTO 0) := "01001001";
         jb_opcd : STD_LOGIC_VECTOR(7 DOWNTO 0) := "01001000";
+        jbe_opcd : STD_LOGIC_VECTOR(7 DOWNTO 0) := "01001100";
         cbw_opcd : STD_LOGIC_VECTOR(7 DOWNTO 0) := "01100010");
 
     PORT (
@@ -91,7 +92,8 @@ ARCHITECTURE behavioral OF controller IS
         and_im1, and_im2, and_im3, and_im4, and_im5, and_im6,
         and_reg1, and_reg2, and_reg3, and_reg4, and_reg5, not1, not2, not3, or_im1, or_im2, or_im3, or_im4, or_im5, or_im6,
         rol1, rol2, rol3, ror1, ror2, ror3, sar1, sar2, sar3, sal1, sal2, sal3, test1, test2, test3, test4, test5,
-        xor1, xor2, xor3, xor4, xor5, ja1, ja2, ja3, jae1, jae2, jae3, jb1, jb2, jb3);
+        xor1, xor2, xor3, xor4, xor5, ja1, ja2, ja3, jae1, jae2, jae3, jb1, jb2, jb3,
+        jbe1, jbe2, jbe3);
 
     SIGNAL pstate, nstate : state := idle;
 
@@ -257,6 +259,9 @@ BEGIN
 
                 ELSIF (inst_reg_out(7 DOWNTO 0) = jb_opcd) THEN
                     nstate <= jb1;
+
+                ELSIF (inst_reg_out(7 DOWNTO 0) = jbe_opcd) THEN
+                    nstate <= jbe1;
 
                 ELSE
                     nstate <= fetch;
@@ -1218,6 +1223,29 @@ BEGIN
                 nstate <= fetch;
                 pop_from_queue <= '1';
                 number_of_pop <= 6;
+
+            WHEN jbe1 =>
+                nstate <= jbe2;
+                alu_temp_reg1_en <= '1';
+                cx_tri_en <= '1';
+
+            WHEN jbe2 =>
+                alu_op_sel <= "0111";
+                alu_tri_en <= '1';
+                cx_en <= '1';
+                IF flag_reg_out(1) = '1' OR flag_reg_out(0) = '1' THEN
+                    ip_mux_sel <= "01";
+                    update_IP_loop <= '1';
+                    nstate <= jbe3;
+                ELSE
+                    nstate <= fetch;
+                END IF;
+
+            WHEN jbe3 =>
+                nstate <= fetch;
+                pop_from_queue <= '1';
+                number_of_pop <= 6;
+
         END CASE;
     END PROCESS;
 
