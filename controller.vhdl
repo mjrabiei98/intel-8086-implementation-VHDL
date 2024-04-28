@@ -5,47 +5,6 @@ USE IEEE.STD_LOGIC_UNSIGNED.ALL;
 USE IEEE.NUMERIC_STD.ALL;
 ENTITY controller IS
 
-    GENERIC (
-        AX_reg_opcd : STD_LOGIC_VECTOR(2 DOWNTO 0) := "000";
-        CX_reg_opcd : STD_LOGIC_VECTOR(2 DOWNTO 0) := "001";
-        DX_reg_opcd : STD_LOGIC_VECTOR(2 DOWNTO 0) := "010";
-        BX_reg_opcd : STD_LOGIC_VECTOR(2 DOWNTO 0) := "011";
-        SP_reg_opcd : STD_LOGIC_VECTOR(2 DOWNTO 0) := "100";
-        BP_reg_opcd : STD_LOGIC_VECTOR(2 DOWNTO 0) := "101";
-        SI_reg_opcd : STD_LOGIC_VECTOR(2 DOWNTO 0) := "110";
-        DI_reg_opcd : STD_LOGIC_VECTOR(2 DOWNTO 0) := "111";
-        move_mem_reg_opcd : STD_LOGIC_VECTOR(4 DOWNTO 0) := "10010";
-        move_imd_opcd : STD_LOGIC_VECTOR(3 DOWNTO 0) := "1011";
-        inc_reg_opcd : STD_LOGIC_VECTOR(4 DOWNTO 0) := "01000";
-        dec_reg_opcd : STD_LOGIC_VECTOR(4 DOWNTO 0) := "01001";
-        mul_reg_reg_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "1111011";
-        loop_disp_opcd : STD_LOGIC_VECTOR(7 DOWNTO 0) := "11100010";
-        loopz_disp_opcd : STD_LOGIC_VECTOR(7 DOWNTO 0) := "11100001";
-        adc_im_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "0001010";
-        add_im_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "0000010";
-        add_mm_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "0000001";
-        cmp_reg_reg_opcd : STD_LOGIC_VECTOR(5 DOWNTO 0) := "001110";
-        cmps_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "1010011";
-        cwd_opcd : STD_LOGIC_VECTOR(7 DOWNTO 0) := "01100011";
-        imul_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "1111010";
-        neg_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "1111001";
-        sbb_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "0001110";
-        scas_opcd : STD_LOGIC_VECTOR(5 DOWNTO 0) := "101011";
-        and_im_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "0010010";
-        and_reg_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "1000000";
-        not_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "1111000";
-        or_im_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "0000110";
-        rol_opcd : STD_LOGIC_VECTOR(5 DOWNTO 0) := "110100";
-        sar_opcd : STD_LOGIC_VECTOR(5 DOWNTO 0) := "110100";
-        sal_opcd : STD_LOGIC_VECTOR(5 DOWNTO 0) := "110100";
-        test_im_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "1010100";
-        xor_im_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "0011010";
-        ja_opcd : STD_LOGIC_VECTOR(7 DOWNTO 0) := "01001101";
-        jae_opcd : STD_LOGIC_VECTOR(7 DOWNTO 0) := "01001001";
-        jb_opcd : STD_LOGIC_VECTOR(7 DOWNTO 0) := "01001000";
-        jbe_opcd : STD_LOGIC_VECTOR(7 DOWNTO 0) := "01001100";
-        cbw_opcd : STD_LOGIC_VECTOR(7 DOWNTO 0) := "01100010");
-
     PORT (
         clk, rst : IN STD_LOGIC;
         ES_tri : OUT STD_LOGIC;
@@ -79,6 +38,46 @@ ENTITY controller IS
 END ENTITY controller;
 
 ARCHITECTURE behavioral OF controller IS
+
+    CONSTANT AX_reg_opcd : STD_LOGIC_VECTOR(2 DOWNTO 0) := "000";
+    CONSTANT CX_reg_opcd : STD_LOGIC_VECTOR(2 DOWNTO 0) := "001";
+    CONSTANT DX_reg_opcd : STD_LOGIC_VECTOR(2 DOWNTO 0) := "010";
+    CONSTANT BX_reg_opcd : STD_LOGIC_VECTOR(2 DOWNTO 0) := "011";
+    CONSTANT SP_reg_opcd : STD_LOGIC_VECTOR(2 DOWNTO 0) := "100";
+    CONSTANT BP_reg_opcd : STD_LOGIC_VECTOR(2 DOWNTO 0) := "101";
+    CONSTANT SI_reg_opcd : STD_LOGIC_VECTOR(2 DOWNTO 0) := "110";
+    CONSTANT DI_reg_opcd : STD_LOGIC_VECTOR(2 DOWNTO 0) := "111";
+    CONSTANT move_mem_reg_opcd : STD_LOGIC_VECTOR(4 DOWNTO 0) := "10010";
+    CONSTANT move_imd_opcd : STD_LOGIC_VECTOR(3 DOWNTO 0) := "1011";
+    CONSTANT inc_reg_opcd : STD_LOGIC_VECTOR(4 DOWNTO 0) := "01000";
+    CONSTANT dec_reg_opcd : STD_LOGIC_VECTOR(4 DOWNTO 0) := "01001";
+    CONSTANT mul_reg_reg_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "1111011";
+    CONSTANT loop_disp_opcd : STD_LOGIC_VECTOR(7 DOWNTO 0) := "11100010";
+    CONSTANT loopz_disp_opcd : STD_LOGIC_VECTOR(7 DOWNTO 0) := "11100001";
+    CONSTANT adc_im_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "0001010";
+    CONSTANT add_im_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "0000010";
+    CONSTANT add_mm_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "0000001";
+    CONSTANT cmp_reg_reg_opcd : STD_LOGIC_VECTOR(5 DOWNTO 0) := "001110";
+    CONSTANT cmps_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "1010011";
+    CONSTANT cwd_opcd : STD_LOGIC_VECTOR(7 DOWNTO 0) := "01100011";
+    CONSTANT imul_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "1111010";
+    CONSTANT neg_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "1111001";
+    CONSTANT sbb_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "0001110";
+    CONSTANT scas_opcd : STD_LOGIC_VECTOR(5 DOWNTO 0) := "101011";
+    CONSTANT and_im_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "0010010";
+    CONSTANT and_reg_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "1000000";
+    CONSTANT not_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "1111000";
+    CONSTANT or_im_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "0000110";
+    CONSTANT rol_opcd : STD_LOGIC_VECTOR(5 DOWNTO 0) := "110100";
+    CONSTANT sar_opcd : STD_LOGIC_VECTOR(5 DOWNTO 0) := "110100";
+    CONSTANT sal_opcd : STD_LOGIC_VECTOR(5 DOWNTO 0) := "110100";
+    CONSTANT test_im_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "1010100";
+    CONSTANT xor_im_opcd : STD_LOGIC_VECTOR(6 DOWNTO 0) := "0011010";
+    CONSTANT ja_opcd : STD_LOGIC_VECTOR(7 DOWNTO 0) := "01001101";
+    CONSTANT jae_opcd : STD_LOGIC_VECTOR(7 DOWNTO 0) := "01001001";
+    CONSTANT jb_opcd : STD_LOGIC_VECTOR(7 DOWNTO 0) := "01001000";
+    CONSTANT jbe_opcd : STD_LOGIC_VECTOR(7 DOWNTO 0) := "01001100";
+    CONSTANT cbw_opcd : STD_LOGIC_VECTOR(7 DOWNTO 0) := "01100010";
 
     TYPE state IS (idle, fetch, decode_state, move_reg_reg_state, move_reg_mem_state,
         move_mem_reg_state, mevoe_immediate1, mevoe_immediate2, mevoe_immediate3, mul_reg_reg_state1,
